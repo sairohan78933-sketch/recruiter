@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHire - Welcome Recruiter</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* MANDATORY COLOR PALETTE */
+            --primary: #4A62DD;
+            --background: #DBEDFC;
+            --card-bg: #BCC1F2;
+            --success: #DEFC4A;
+            --danger: #FC4860;
+            --warning: #FBF4DC;
+            --info: #5FE3FB;
+            
+            /* Derived/Utility Colors */
+            --text-dark: #1e293b;
+            --text-light: #ffffff;
+            --text-muted: #475569;
+            --border-color: #a5b4fc;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 7.1 GLOBAL HEADER */
+        .global-header {
+            height: 64px;
+            background-color: var(--primary);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .user-link:hover { text-decoration: underline; }
+
+        .avatar-link {
+            text-decoration: none;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--info);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .avatar:hover { transform: scale(1.05); }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px 24px 100px 24px; /* Bottom padding for footer */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* 7.2 WELCOME SECTION */
+        .welcome-section {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .page-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .last-login {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 7.3 JD ACTION CARDS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .action-card {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(74, 98, 221, 0.08);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .helper-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* Upload Card Specifics */
+        .upload-area {
+            flex: 1;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            background-color: rgba(219, 237, 252, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            gap: 16px;
+            transition: background 0.2s;
+        }
+        .upload-area:hover { background-color: rgba(219, 237, 252, 0.6); }
+
+        .plus-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        /* Select Card Specifics */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .jd-select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+            color: var(--text-dark);
+            background-color: white;
+            outline: none;
+            cursor: pointer;
+        }
+        .jd-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 98, 221, 0.1);
+        }
+
+        .edit-link-section {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .edit-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .jd-edit-link {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .jd-edit-link.disabled {
+            color: #ccc;
+            pointer-events: none;
+            cursor: default;
+        }
+        .jd-edit-link:hover:not(.disabled) { text-decoration: underline; }
+
+        /* 7.5 JD COUNT SECTION */
+        .jd-count-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: var(--card-bg);
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: var(--primary);
+            font-weight: 600;
+            width: fit-content;
+        }
+
+        /* 7.6 FOOTER ACTION SECTION */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: var(--white);
+            border-top: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+            z-index: 50;
+        }
+
+        .footer-info {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { background-color: #3a4eb5; }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+        }
+        .btn-secondary:hover { background-color: #e2e8f0; }
+
+        /* 7.4 EDIT JD POPUP (MODAL) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(30, 41, 59, 0.6);
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-container {
+            background-color: white;
+            width: 800px;
+            max-width: 90%;
+            height: 80vh;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .modal-subtitle { font-size: 0.9rem; color: var(--text-muted); margin-left: 12px; font-weight: 400; }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            background-color: #f8fafc;
+        }
+
+        .rich-editor {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toolbar {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 8px;
+            background-color: #fdfdfd;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tool-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #eee;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+        }
+
+        .editor-content {
+            flex: 1;
+            padding: 16px;
+            outline: none;
+            overflow-y: auto;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .char-count { font-size: 0.85rem; color: var(--text-muted); }
+        .modal-actions { display: flex; gap: 12px; }
+
+    </style>
+</head>
+<body>
+
+    <!-- 7.1 GLOBAL HEADER -->
+    <header class="global-header">
+        <div class="logo">SmartHire</div>
+        <div class="header-right">
+            <span>Welcome back, <a href="#" class="user-link">Sarah</a></span>
+            <a href="#" class="avatar-link">
+                <div class="avatar">S</div>
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            
+            <!-- 7.2 WELCOME SECTION -->
+            <div class="welcome-section">
+                <h1 class="page-title">Welcome to SmartHire</h1>
+                <p class="page-desc">You can review AI-assisted candidate evaluations and make final, accountable hiring decisions.</p>
+                <div class="last-login">
+                    <i class="far fa-clock"></i> Last Login: 21 Jan 2026, 09:42 AM
+                </div>
+            </div>
+
+            <!-- 7.3 JD ACTION CARDS -->
+            <div class="cards-grid">
+                <!-- 7.3.1 Upload JD Card -->
+                <div class="action-card">
+                    <div class="card-title">
+                        <i class="fas fa-cloud-upload-alt" style="color: var(--primary);"></i> Upload JD
+                    </div>
+                    <div class="helper-text">Upload a new Job Description</div>
+                    
+                    <div class="upload-area">
+                        <i class="fas fa-plus-circle plus-icon"></i>
+                        <button class="btn btn-primary">Upload JD</button>
+                    </div>
+                </div>
+
+                <!-- 7.3.2 Select JD Card -->
+                <div class="action-card">
+                    <div class="card-title">
+                        <i class="fas fa-file-alt" style="color: var(--primary);"></i> Select JD
+                    </div>
+                    <div class="helper-text">Select and manage Job Descriptions</div>
+
+                    <div class="form-group">
+                        <select class="jd-select" id="jdDropdown">
+                            <option value="" disabled selected>Select Job Description</option>
+                            <option value="Software Engineer">Software Engineer</option>
+                            <option value="Product Manager">Product Manager</option>
+                            <option value="Data Scientist">Data Scientist</option>
+                            <option value="Marketing Specialist">Marketing Specialist</option>
+                            <option value="Sales Executive">Sales Executive</option>
+                            <option value="Customer Support Rep">Customer Support Rep</option>
+                            <option value="Financial Analyst">Financial Analyst</option>
+                            <option value="Human Resources Specialist">Human Resources Specialist</option>
+                        </select>
+                    </div>
+
+                    <!-- 7.3.3 Edit / Update JD Section -->
+                    <div class="edit-link-section">
+                        <div class="edit-label">Edit / Update JD click on this link:</div>
+                        <a id="editLink" class="jd-edit-link disabled">
+                            <span id="editLinkText">Select a JD first</span> <i class="fas fa-external-link-alt" style="font-size: 0.8em;"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7.5 JD COUNT SECTION -->
+            <div class="jd-count-section">
+                <i class="fas fa-layer-group"></i>
+                <span>Total Job Descriptions: 24</span>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 7.6 FOOTER ACTION SECTION -->
+    <footer class="bottom-bar">
+        <div class="footer-info">Total Job Descriptions: 24</div>
+        <button class="btn btn-primary">
+            Proceed <i class="fas fa-arrow-right"></i>
+        </button>
+    </footer>
+
+    <!-- 7.4 EDIT JOB DESCRIPTION POPUP -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-container">
+            <!-- 7.4.1 Popup Header -->
+            <div class="modal-header">
+                <div>
+                    <span class="modal-title">Edit Job Description</span>
+                    <span class="modal-subtitle" id="modalJdName">Product Manager – V6.4</span>
+                </div>
+                <button class="close-btn" id="closeModalBtn"><i class="fas fa-times"></i></button>
+            </div>
+
+            <!-- 7.4.2 JD Content Editor -->
+            <div class="modal-body">
+                <div class="rich-editor">
+                    <div class="toolbar">
+                        <button class="tool-btn"><i class="fas fa-bold"></i></button>
+                        <button class="tool-btn"><i class="fas fa-italic"></i></button>
+                        <button class="tool-btn"><i class="fas fa-underline"></i></button>
+                        <div style="width: 1px; background: #eee; margin: 0 4px;"></div>
+                        <button class="tool-btn"><i class="fas fa-list-ul"></i></button>
+                        <button class="tool-btn"><i class="fas fa-list-ol"></i></button>
+                    </div>
+                    <div class="editor-content" contenteditable="true" id="jdEditor">
+                        <h3>Responsibilities</h3>
+                        <ul>
+                            <li>Define product vision and strategy.</li>
+                            <li>Work closely with engineering and design teams.</li>
+                            <li>Analyze market trends and competitor data.</li>
+                        </ul>
+                        <h3>Requirements</h3>
+                        <ul>
+                            <li>5+ years of experience in Product Management.</li>
+                            <li>Strong analytical and communication skills.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7.4.4 Popup Action Buttons & 7.4.3 Char Counter -->
+            <div class="modal-footer">
+                <div class="char-count" id="charCount">Characters: 1204</div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button class="btn btn-primary" id="saveBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const jdDropdown = document.getElementById('jdDropdown');
+        const editLink = document.getElementById('editLink');
+        const editLinkText = document.getElementById('editLinkText');
+        const editModal = document.getElementById('editModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const modalJdName = document.getElementById('modalJdName');
+        const jdEditor = document.getElementById('jdEditor');
+        const charCount = document.getElementById('charCount');
+
+        // 7.3.3 System Rule: Link enabled only when JD selected
+        jdDropdown.addEventListener('change', function() {
+            if (this.value) {
+                editLink.classList.remove('disabled');
+                // Simulating version retrieval
+                const version = "V6.4"; 
+                editLinkText.textContent = `${this.value} – ${version}`;
+            } else {
+                editLink.classList.add('disabled');
+                editLinkText.textContent = "Select a JD first";
+            }
+        });
+
+        // 7.3.3 System Rule: Clicking link opens popup
+        editLink.addEventListener('click', function() {
+            if (!this.classList.contains('disabled')) {
+                modalJdName.textContent = editLinkText.textContent;
+                editModal.classList.add('active');
+                updateCharCount();
+            }
+        });
+
+        // Modal Actions
+        function closeModal() {
+            editModal.classList.remove('active');
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        // 7.7 System Rule: Saving creates new version (Simulated)
+        saveBtn.addEventListener('click', function() {
+            alert("Changes saved! A new version has been created.");
+            closeModal();
+        });
+
+        // 7.4.3 Character Counter Logic
+        function updateCharCount() {
+            const text = jdEditor.innerText || "";
+            charCount.textContent = `Characters: ${text.length}`;
+        }
+
+        jdEditor.addEventListener('input', updateCharCount);
+
+        // Close modal on outside click
+        editModal.addEventListener('click', function(e) {
+            if (e.target === editModal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

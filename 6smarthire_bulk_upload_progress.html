@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHire - Bulk Upload Progress</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* MANDATORY COLOR PALETTE */
+            --primary: #4A62DD;
+            --background: #DBEDFC;
+            --card-bg: #BCC1F2;
+            --success: #DEFC4A;
+            --danger: #FC4860;
+            --warning: #FBF4DC;
+            --info: #5FE3FB;
+            
+            /* Derived/Utility Colors */
+            --text-dark: #1e293b;
+            --text-light: #ffffff;
+            --text-muted: #475569;
+            --sidebar-bg: #3a4eb5;
+            --border-color: #a5b4fc;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* GLOBAL HEADER */
+        .global-header {
+            height: 64px;
+            background-color: var(--primary);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-left { display: flex; align-items: center; gap: 24px; }
+        .logo { font-weight: 700; font-size: 1.25rem; letter-spacing: -0.5px; }
+        .page-context { font-weight: 300; opacity: 0.9; border-left: 1px solid rgba(255,255,255,0.3); padding-left: 24px; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .user-profile { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .avatar { width: 36px; height: 36px; background-color: var(--info); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: bold; }
+
+        /* LAYOUT CONTAINER */
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            background-color: var(--sidebar-bg);
+            color: rgba(255,255,255,0.8);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        .nav-item:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .nav-item.active { background-color: var(--primary); color: white; border-left: 4px solid var(--info); }
+        .sidebar-spacer { flex: 1; }
+
+        /* MAIN CONTENT AREA */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* 12.1 PAGE TITLE */
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 24px;
+        }
+
+        /* 12.2 OVERALL UPLOAD PROGRESS */
+        .progress-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .helper-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 8px;
+        }
+
+        .progress-percentage {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .progress-details {
+            text-align: right;
+        }
+
+        .processed-count {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .upload-status {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .progress-bar-container {
+            height: 12px;
+            background-color: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 75%; /* Static 75% as per requirement */
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+
+        /* 12.3 BULK UPLOAD ACTIONS */
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            border: 1px solid #cbd5e1;
+            color: var(--text-dark);
+        }
+        .btn-secondary:hover { background-color: #f1f5f9; }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { background-color: #3a4eb5; }
+        
+        .btn:disabled {
+            background-color: #cbd5e1;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        /* 12.4 INDIVIDUAL FILE STATUS SECTION */
+        .files-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .files-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-input {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            width: 250px;
+        }
+
+        .status-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background-color: white;
+        }
+
+        /* 12.5 INDIVIDUAL FILE STATUS TABLE */
+        .table-responsive {
+            overflow-y: auto;
+            flex: 1;
+            max-height: 400px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-completed { background-color: var(--success); color: #3f4a11; }
+        .status-progress { background-color: var(--warning); color: #7c6a0b; }
+        .status-failed { background-color: var(--danger); color: white; }
+
+        .dot { width: 8px; height: 8px; border-radius: 50%; background-color: currentColor; }
+
+        /* 12.7 FOOTER */
+        .page-footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 32px;
+            padding-bottom: 16px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- GLOBAL HEADER -->
+    <header class="global-header">
+        <div class="header-left">
+            <div class="logo">SmartHire</div>
+            <div class="page-context">Recruiter Dashboard</div>
+        </div>
+        <div class="header-right">
+            <span>Welcome back, Sarah!</span>
+            <i class="fas fa-bell"></i>
+            <div class="user-profile">
+                <div class="avatar">S</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <div class="nav-item">
+                <i class="fas fa-columns" style="width: 20px;"></i> Dashboard
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-code-branch" style="width: 20px;"></i> JD Version
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-file-upload" style="width: 20px;"></i> Resume Upload
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-chart-pie" style="width: 20px;"></i> Analysis Result
+            </div>
+            <div class="sidebar-spacer"></div>
+            <div class="nav-item">
+                <i class="fas fa-cog" style="width: 20px;"></i> Settings
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-question-circle" style="width: 20px;"></i> Help
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="content-area">
+            <div class="content-wrapper">
+                
+                <!-- 12.1 PAGE TITLE -->
+                <h1 class="page-title">Bulk Upload Progress</h1>
+
+                <!-- 12.2 OVERALL UPLOAD PROGRESS -->
+                <div class="progress-card">
+                    <div class="section-title">Overall Upload Progress</div>
+                    <div class="helper-text">Monitor the status of your bulk resume upload.</div>
+                    
+                    <div class="progress-stats">
+                        <div class="progress-percentage" id="progressPercent">75%</div>
+                        <div class="progress-details">
+                            <div class="processed-count" id="processedCount">375 of 500 files</div>
+                            <div class="upload-status" id="uploadStatus">Processing...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+
+                <!-- 12.3 BULK UPLOAD ACTION BUTTONS -->
+                <div class="action-row">
+                    <button class="btn btn-secondary">Cancel Upload</button>
+                    <button class="btn btn-primary" id="resumeSelectionBtn" disabled>Go to Resume Selection</button>
+                </div>
+
+                <!-- 12.4 INDIVIDUAL FILE STATUS SECTION -->
+                <div class="files-section">
+                    <div class="files-header">
+                        <div class="section-title">Individual File Status</div>
+                        <div class="filters">
+                            <input type="text" class="search-input" placeholder="Search file names">
+                            <select class="status-select">
+                                <option value="all">All</option>
+                                <option value="completed">Completed</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 12.5 INDIVIDUAL FILE STATUS TABLE -->
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>Status</th>
+                                    <th>Last Update</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fileTableBody">
+                                <tr>
+                                    <td>Resume_John_Doe_Senior_Dev.pdf</td>
+                                    <td><span class="status-badge status-completed"><div class="dot"></div> Completed</span></td>
+                                    <td>Oct 24, 2026 10:42:05 AM</td>
+                                </tr>
+                                <tr>
+                                    <td>Resume_Jane_Smith_ML_Eng.pdf</td>
+                                    <td><span class="status-badge status-completed"><div class="dot"></div> Completed</span></td>
+                                    <td>Oct 24, 2026 10:42:08 AM</td>
+                                </tr>
+                                <tr>
+                                    <td>Resume_Bob_Johnson_Data.pdf</td>
+                                    <td><span class="status-badge status-progress row-status"><div class="dot"></div> In Progress</span></td>
+                                    <td>Oct 24, 2026 10:42:10 AM</td>
+                                </tr>
+                                <tr>
+                                    <td>Resume_Alice_Williams_Frontend.pdf</td>
+                                    <td><span class="status-badge status-failed"><div class="dot"></div> Failed</span></td>
+                                    <td>Oct 24, 2026 10:42:01 AM</td>
+                                </tr>
+                                <tr>
+                                    <td>Resume_Charlie_Brown_Backend.pdf</td>
+                                    <td><span class="status-badge status-completed"><div class="dot"></div> Completed</span></td>
+                                    <td>Oct 24, 2026 10:42:03 AM</td>
+                                </tr>
+                                <tr>
+                                    <td>Resume_David_Miller_Fullstack.pdf</td>
+                                    <td><span class="status-badge status-progress row-status"><div class="dot"></div> In Progress</span></td>
+                                    <td>Oct 24, 2026 10:42:12 AM</td>
+                                </tr>
+                                <tr>
+                                    <td>Resume_Eva_Davis_QA.pdf</td>
+                                    <td><span class="status-badge status-completed"><div class="dot"></div> Completed</span></td>
+                                    <td>Oct 24, 2026 10:42:06 AM</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 12.7 FOOTER -->
+                <footer class="page-footer">
+                    © 2026 SmartHire. All rights reserved.
+                </footer>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simulation of Real-time Progress
+        const progressBar = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
+        const processedCount = document.getElementById('processedCount');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const resumeSelectionBtn = document.getElementById('resumeSelectionBtn');
+        const fileTableBody = document.getElementById('fileTableBody');
+
+        let currentPercent = 75;
+        const totalFiles = 500;
+        
+        // Simulate progress update
+        const interval = setInterval(() => {
+            if (currentPercent >= 100) {
+                clearInterval(interval);
+                completeUpload();
+            } else {
+                currentPercent += 1;
+                updateUI(currentPercent);
+            }
+        }, 100); // Fast simulation
+
+        function updateUI(percent) {
+            progressBar.style.width = percent + '%';
+            progressPercent.textContent = percent + '%';
+            
+            const processed = Math.floor((percent / 100) * totalFiles);
+            processedCount.textContent = `${processed} of ${totalFiles} files`;
+        }
+
+        function completeUpload() {
+            uploadStatus.textContent = "Upload Completed";
+            uploadStatus.style.color = "var(--success)";
+            uploadStatus.style.fontWeight = "bold";
+            
+            resumeSelectionBtn.disabled = false;
+
+            // Update table rows that were in progress
+            const progressRows = document.querySelectorAll('.row-status');
+            progressRows.forEach(badge => {
+                badge.className = 'status-badge status-completed';
+                badge.innerHTML = '<div class="dot"></div> Completed';
+            });
+        }
+    </script>
+
+</body>
+</html>

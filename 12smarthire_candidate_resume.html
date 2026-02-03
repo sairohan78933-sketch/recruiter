@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHire - Candidate Resume Detail</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* MANDATORY COLOR PALETTE */
+            --primary: #4A62DD;
+            --background: #DBEDFC;
+            --card-bg: #BCC1F2;
+            --success: #DEFC4A;
+            --danger: #FC4860;
+            --warning: #FBF4DC;
+            --info: #5FE3FB;
+
+            /* Derived/Utility Colors */
+            --text-dark: #1e293b;
+            --text-light: #ffffff;
+            --text-muted: #475569;
+            --sidebar-bg: #3a4eb5;
+            --border-color: #a5b4fc;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* GLOBAL HEADER */
+        .global-header {
+            height: 64px;
+            background-color: var(--primary);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .page-context {
+            font-weight: 300;
+            opacity: 0.9;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            padding-left: 24px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--info);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* LAYOUT CONTAINER */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            background-color: var(--sidebar-bg);
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+            border-left: 4px solid var(--info);
+        }
+
+        .sidebar-spacer {
+            flex: 1;
+        }
+
+        /* MAIN CONTENT AREA */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 18.1 PAGE TITLE */
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 24px;
+        }
+
+        /* LAYOUT GRID */
+        .resume-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            flex: 1;
+            overflow: hidden;
+            /* To allow internal scrolling */
+        }
+
+        /* 18.2 RESUME DOCUMENT SECTION */
+        .resume-document {
+            background-color: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        .doc-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--background);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .resume-section {
+            margin-bottom: 32px;
+        }
+
+        .section-heading {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .resume-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .resume-list {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+
+        .resume-list li {
+            margin-bottom: 6px;
+        }
+
+        .entry-block {
+            margin-bottom: 16px;
+        }
+
+        .entry-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .entry-meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        /* 18.3 CANDIDATE DETAILS SECTION (RIGHT PANEL) */
+        .candidate-panel {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .panel-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* 18.3.1 Profile Info */
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background-color: var(--card-bg);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .profile-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .profile-role {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .info-grid {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-size: 0.9rem;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* 18.3.2 Skills */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            background-color: var(--background);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* 18.3.3 Summary */
+        .summary-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-dark);
+        }
+
+        /* Back Button Styles */
+        .back-nav {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            color: var(--primary);
+            margin-right: 16px;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .back-button:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateX(-2px);
+            border-color: var(--primary);
+        }
+
+        .back-button::after {
+            content: "back to the dashboard";
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-left: 10px;
+            background-color: #1e293b;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover::after {
+            opacity: 1;
+            visibility: visible;
+            margin-left: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- GLOBAL HEADER -->
+    <header class="global-header">
+        <div class="header-left">
+            <div class="logo">SmartHire</div>
+            <div class="page-context">Recruiter Dashboard</div>
+        </div>
+        <div class="header-right">
+            <span>Welcome back, Sarah!</span>
+            <i class="fas fa-bell"></i>
+            <div class="user-profile">
+                <div class="avatar">S</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <div class="nav-item">
+                <i class="fas fa-columns" style="width: 20px;"></i> Dashboard
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-code-branch" style="width: 20px;"></i> JD Version
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-file-upload" style="width: 20px;"></i> Resume Upload
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-chart-pie" style="width: 20px;"></i> Analysis Result
+            </div>
+            <div class="sidebar-spacer"></div>
+            <div class="nav-item">
+                <i class="fas fa-cog" style="width: 20px;"></i> Settings
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-question-circle" style="width: 20px;"></i> Help
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="content-area">
+            <div class="content-wrapper">
+
+                <!-- 18.1 PAGE TITLE -->
+                <div class="back-nav">
+                    <a href="2Dashboard_Recruiter.html" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h1 class="page-title" style="margin-bottom: 0;">Candidate Resume: John Doe</h1>
+                </div>
+
+                <div class="resume-grid">
+
+                    <!-- 18.2 RESUME DOCUMENT SECTION (Left) -->
+                    <div class="resume-document">
+                        <div class="doc-title">Resume Document</div>
+
+                        <!-- 18.2.1 Career Objective -->
+                        <div class="resume-section">
+                            <h3 class="section-heading">Career Objective</h3>
+                            <p class="resume-text">
+                                To secure a challenging position in a reputable organization to expand my learnings,
+                                knowledge, and skills.
+                            </p>
+                        </div>
+
+                        <!-- 18.2.2 Education -->
+                        <div class="resume-section">
+                            <h3 class="section-heading">Education</h3>
+                            <ul class="resume-list resume-text">
+                                <li>
+                                    <strong>B.Tech in Information Technology</strong> – Siddharth Institute of
+                                    Engineering and Technology, Puttur<br>
+                                    (2020–2024) | CGPA: 7.98
+                                </li>
+                                <li>
+                                    <strong>Intermediate (MPC)</strong> – Narayana Junior College, Renigunta<br>
+                                    (2018–2020) | CGPA: 8.79
+                                </li>
+                                <li>
+                                    <strong>SSC</strong> – Sri Vidya Jyothi EM High School, Srikalahasti<br>
+                                    (2017–2018) | CGPA: 9.2
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 18.2.3 Experience / Internships -->
+                        <div class="resume-section">
+                            <h3 class="section-heading">Experience / Internships</h3>
+
+                            <div class="entry-block">
+                                <div class="entry-title">Java Programming Intern</div>
+                                <div class="entry-meta">Rowwit Software Technology Pvt Ltd (2022)</div>
+                                <ul class="resume-list resume-text">
+                                    <li>Worked on Java programming tasks</li>
+                                    <li>Collaborated with senior developers</li>
+                                </ul>
+                            </div>
+
+                            <div class="entry-block">
+                                <div class="entry-title">Python Developer Intern</div>
+                                <div class="entry-meta">Motion Cut Video Studio (2023)</div>
+                            </div>
+
+                            <div class="entry-block">
+                                <div class="entry-title">Web Application Developer</div>
+                                <div class="entry-meta">College Project (2022–2023)</div>
+                                <ul class="resume-list resume-text">
+                                    <li>Built responsive web applications</li>
+                                    <li>Optimized website performance</li>
+                                    <li>Improved UI/UX and cross-browser compatibility</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 18.3 CANDIDATE DETAILS SECTION (Right) -->
+                    <aside class="candidate-panel">
+                        <div class="panel-header">Candidate Details</div>
+
+                        <!-- 18.3.1 Profile Info -->
+                        <div class="profile-section">
+                            <div class="profile-avatar">JD</div>
+                            <div class="profile-name">John Doe</div>
+                            <div class="profile-role">Software Engineer</div>
+                        </div>
+
+                        <div class="info-grid">
+                            <div class="info-row">
+                                <span class="info-label">Email</span>
+                                <span class="info-value">john.doe@example.com</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Phone</span>
+                                <span class="info-value">+1 (555) 123-4567</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Location</span>
+                                <span class="info-value">San Francisco, CA</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Experience</span>
+                                <span class="info-value">8 years</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Education</span>
+                                <span class="info-value">Master of Science in Computer Science, Stanford University
+                                    (2016)</span>
+                            </div>
+                        </div>
+
+                        <!-- 18.3.2 Skills -->
+                        <div>
+                            <div class="info-label" style="margin-bottom: 8px;">Skills</div>
+                            <div class="skills-container">
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">Node.js</span>
+                                <span class="skill-tag">AWS</span>
+                                <span class="skill-tag">TypeScript</span>
+                                <span class="skill-tag">REST APIs</span>
+                                <span class="skill-tag">SQL</span>
+                                <span class="skill-tag">Docker</span>
+                                <span class="skill-tag">Kubernetes</span>
+                                <span class="skill-tag">Microservices</span>
+                            </div>
+                        </div>
+
+                        <!-- 18.3.3 Summary -->
+                        <div>
+                            <div class="info-label" style="margin-bottom: 8px;">Summary</div>
+                            <div class="summary-text">
+                                <p>Highly skilled software engineer with 8 years of experience.</p>
+                                <p style="margin-top: 4px;">Expertise in scalable web applications and modern
+                                    technologies.</p>
+                                <p style="margin-top: 4px;">Proven ability to lead projects and mentor junior
+                                    developers.</p>
+                            </div>
+                        </div>
+
+                    </aside>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

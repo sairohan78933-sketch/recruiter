@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHire - Recruiter Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* MANDATORY COLOR PALETTE */
+            --primary: #4A62DD;
+            --background: #DBEDFC;
+            --card-bg: #BCC1F2;
+            --success: #2E7D32;
+            --danger: #FC4860;
+            --warning: #FF9800;
+            --info: #5FE3FB;
+
+            /* Derived/Utility Colors */
+            --text-dark: #1e293b;
+            --text-light: #ffffff;
+            --text-muted: #475569;
+            --sidebar-bg: #3a4eb5;
+            /* Slightly darker than primary/bg mix */
+            --border-color: #a5b4fc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            height: 100vh;
+            overflow: hidden;
+            /* Fixed layout */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 1) GLOBAL HEADER */
+        .global-header {
+            height: 64px;
+            background-color: var(--primary);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .page-context {
+            font-weight: 300;
+            opacity: 0.9;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            padding-left: 24px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--info);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* LAYOUT CONTAINER */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 2) LEFT NAVIGATION SIDEBAR */
+        .sidebar {
+            width: 240px;
+            background-color: var(--sidebar-bg);
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+            border-left: 4px solid var(--info);
+        }
+
+        .sidebar-spacer {
+            flex: 1;
+        }
+
+        /* MAIN CONTENT AREA */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            padding-bottom: 80px;
+            /* Space for bottom bar */
+        }
+
+        /* 3) JOB CONTEXT HEADER */
+        .job-context-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(74, 98, 221, 0.1);
+        }
+
+        .jd-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .job-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .section-label {
+            background-color: var(--card-bg);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* 4) KPI CARDS SECTION */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 6px rgba(74, 98, 221, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 110px;
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            opacity: 0.8;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 8px;
+        }
+
+        .kpi-sub {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* 5 & 6) CHARTS & ALERTS ROW */
+        .insights-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Donut Chart Implementation */
+        .chart-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .donut-chart {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            /* Conic Gradient: Success 24%, Danger 61%, Warning 15% */
+            /* 24% of 360 = 86.4deg */
+            /* 61% of 360 = 219.6deg. End = 86.4 + 219.6 = 306deg */
+            background: conic-gradient(var(--success) 0deg 86.4deg,
+                    var(--danger) 86.4deg 306deg,
+                    var(--warning) 306deg 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .donut-hole {
+            width: 90px;
+            height: 90px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot.success {
+            background-color: var(--success);
+        }
+
+        .dot.danger {
+            background-color: var(--danger);
+        }
+
+        .dot.warning {
+            background-color: var(--warning);
+        }
+
+        /* Alerts */
+        .alert-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-icon {
+            color: var(--danger);
+            margin-top: 2px;
+        }
+
+        /* 7) TABULAR RESULT */
+        .table-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            background-color: var(--background);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-bottom: 2px solid var(--card-bg);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.fit {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .badge.unfit {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .badge.info {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .view-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .view-link:hover {
+            text-decoration: underline;
+        }
+
+        /* 8) PAGINATION */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .page-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* 9) BOTTOM ACTION BAR */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 240px;
+            /* Sidebar width */
+            right: 0;
+            height: 70px;
+            background-color: white;
+            border-top: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 32px;
+            gap: 16px;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 90;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-info {
+            background-color: var(--info);
+            color: #005c70;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1) GLOBAL HEADER -->
+    <header class="global-header">
+        <div class="header-left">
+            <div class="logo">SmartHire</div>
+            <div class="page-context">Recruiter Dashboard</div>
+        </div>
+        <div class="header-right">
+            <span>Welcome back, Sarah!</span>
+            <i class="fas fa-bell"></i>
+            <div class="user-profile">
+                <div class="avatar">S</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- 2) LEFT NAVIGATION SIDEBAR -->
+        <nav class="sidebar">
+            <div class="nav-item active">
+                <i class="fas fa-columns" style="width: 20px;"></i> Dashboard
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-code-branch" style="width: 20px;"></i> JD Version
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-file-upload" style="width: 20px;"></i> Resume Upload
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-chart-pie" style="width: 20px;"></i> Analysis Result
+            </div>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="nav-item">
+                <i class="fas fa-cog" style="width: 20px;"></i> Settings
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-question-circle" style="width: 20px;"></i> Help
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="content-area">
+
+            <!-- 3) JOB CONTEXT HEADER -->
+            <div class="job-context-header">
+                <div class="jd-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="job-title">JD: AI/ML Engineer</div>
+                <div class="section-label">Job Overview</div>
+            </div>
+
+            <!-- 4) KPI CARDS SECTION -->
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Total Resumes</span>
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="kpi-value">325</div>
+                    <div class="kpi-sub" style="color: var(--text-muted);">Uploaded</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Fit Candidates</span>
+                        <i class="fas fa-check-circle" style="color: #2E7D32;"></i>
+                    </div>
+                    <div class="kpi-value" style="color: #2E7D32;">78</div>
+                    <div class="kpi-sub">24% of total</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Unfit Candidates</span>
+                        <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                    </div>
+                    <div class="kpi-value" style="color: var(--danger);">198</div>
+                    <div class="kpi-sub">61% of total</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Need More Info</span>
+                        <i class="fas fa-exclamation-triangle" style="color: #F57C00;"></i>
+                    </div>
+                    <div class="kpi-value" style="color: #F57C00;">49</div>
+                    <div class="kpi-sub">15% of total</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Avg. JD Match</span>
+                        <i class="fas fa-star" style="color: var(--primary);"></i>
+                    </div>
+                    <div class="kpi-value">7.4 <span style="font-size: 1rem; color: #666;">/ 10</span></div>
+                    <div class="kpi-sub" style="color: black; font-weight: 700;"><i class="fas fa-check"></i> Completed
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5 & 6) CHARTS & ALERTS -->
+            <div class="insights-row">
+                <!-- Donut Chart -->
+                <div class="panel">
+                    <div class="panel-title">Candidate Classification</div>
+                    <div class="chart-container">
+                        <div class="donut-chart">
+                            <div class="donut-hole">
+                                <div style="font-weight: 700; font-size: 1.5rem;">325</div>
+                                <div style="font-size: 0.7rem; color: #666;">Total</div>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="dot success"></div> Fit (24%)
+                            </div>
+                            <div class="legend-item">
+                                <div class="dot danger"></div> Unfit (61%)
+                            </div>
+                            <div class="legend-item">
+                                <div class="dot warning"></div> Need Info (15%)
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; font-size: 0.75rem; color: #888; text-align: center;">
+                        * Data derived from AI resume analysis
+                    </div>
+                </div>
+
+                <!-- Alerts -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span>Alerts & Insights</span>
+                        <i class="fas fa-robot" style="color: var(--info);"></i>
+                    </div>
+                    <div class="alert-list">
+                        <div class="alert-item">
+                            <i class="fas fa-exclamation-circle alert-icon"></i>
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.9rem;">Low Match Alert</div>
+                                <div style="font-size: 0.85rem; color: #555;">Only 8% candidates have Python skills,
+                                    which is critical for this JD.</div>
+                            </div>
+                        </div>
+                        <div class="alert-item">
+                            <i class="fas fa-certificate alert-icon" style="color: #F57C00;"></i>
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.9rem;">Certification Missing</div>
+                                <div style="font-size: 0.85rem; color: #555;">AWS Certification missing in 23% of "Fit"
+                                    resumes.</div>
+                            </div>
+                        </div>
+                        <div class="alert-item">
+                            <i class="fas fa-history alert-icon"></i>
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.9rem;">Experience Mismatch</div>
+                                <div style="font-size: 0.85rem; color: #555;">High mismatch for 5+ years experience
+                                    requirement.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7) TABULAR RESULT -->
+            <section class="table-container">
+                <div class="panel-title">Tabular Result – AI/ML Engineer</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>SN</th>
+                            <th>Candidate Name</th>
+                            <th>HR Status</th>
+                            <th>Total Exp (Yrs)</th>
+                            <th>Skill Score</th>
+                            <th>AI Status</th>
+                            <th>City</th>
+                            <th>Overall Score</th>
+                            <th>JD Version</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>David Kim</td>
+                            <td><span class="badge fit">Fit</span></td>
+                            <td>6.5</td>
+                            <td>92/100</td>
+                            <td><span class="badge fit">Fit</span></td>
+                            <td>San Francisco</td>
+                            <td>9.1</td>
+                            <td>v1.2</td>
+                            <td><a href="#" class="view-link">View Resume</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Sarah Jenkins</td>
+                            <td><span class="badge unfit">Unfit</span></td>
+                            <td>2.0</td>
+                            <td>45/100</td>
+                            <td><span class="badge unfit">Unfit</span></td>
+                            <td>Austin</td>
+                            <td>4.2</td>
+                            <td>v1.2</td>
+                            <td><a href="#" class="view-link">View Resume</a></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Michael Chen</td>
+                            <td><span class="badge info">Need Info</span></td>
+                            <td>4.0</td>
+                            <td>78/100</td>
+                            <td><span class="badge info">Need Info</span></td>
+                            <td>New York</td>
+                            <td>7.5</td>
+                            <td>v1.2</td>
+                            <td><a href="#" class="view-link">View Resume</a></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Priya Patel</td>
+                            <td><span class="badge fit">Fit</span></td>
+                            <td>8.0</td>
+                            <td>95/100</td>
+                            <td><span class="badge fit">Fit</span></td>
+                            <td>Seattle</td>
+                            <td>9.4</td>
+                            <td>v1.2</td>
+                            <td><a href="#" class="view-link">View Resume</a></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>James Smith</td>
+                            <td><span class="badge unfit">Unfit</span></td>
+                            <td>1.5</td>
+                            <td>30/100</td>
+                            <td><span class="badge unfit">Unfit</span></td>
+                            <td>Chicago</td>
+                            <td>3.8</td>
+                            <td>v1.2</td>
+                            <td><a href="#" class="view-link">View Resume</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- 8) PAGINATION -->
+                <div class="pagination">
+                    <div>
+                        Rows per page:
+                        <select style="padding: 4px; border-radius: 4px; border: 1px solid #ddd;">
+                            <option>10</option>
+                            <option>25</option>
+                            <option>50</option>
+                        </select>
+                    </div>
+                    <div>1–8 of 325</div>
+                    <div class="page-controls">
+                        <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- 9) BOTTOM ACTION BAR -->
+    <footer class="bottom-bar">
+        <button class="btn btn-info">
+            <i class="fas fa-cloud-upload-alt"></i> Upload Resumes
+        </button>
+        <button class="btn btn-primary">
+            <i class="fas fa-play"></i> Start Analysis
+        </button>
+    </footer>
+
+</body>
+
+</html>
