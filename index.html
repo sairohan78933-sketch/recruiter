@@ -1886,6 +1886,9 @@
                     <div class="dropdown-item" onclick="openProfileModal()">
                         <i class="fas fa-user-edit"></i> Edit Profile
                     </div>
+                    <div class="dropdown-item" onclick="openPasswordModal()">
+                        <i class="fas fa-key"></i> Change Password
+                    </div>
                     <div class="dropdown-item logout" onclick="logoutUser()">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </div>
@@ -2127,15 +2130,15 @@
                 <!-- 3) JOB CONTEXT HEADER -->
                 <div class="job-context-header">
                     <div class="jd-icon"><i class="fas fa-briefcase"></i></div><select class="jd-select">
-                        <option value="AI/ML Engineer">AI/ML Engineer</option>
-                        <option value="Software Engineer">Software Engineer</option>
-                        <option value="Product Manager">Product Manager</option>
-                        <option value="Data Scientist">Data Scientist</option>
-                        <option value="Marketing Specialist">Marketing Specialist</option>
-                        <option value="Sales Executive">Sales Executive</option>
-                        <option value="Customer Support Rep">Customer Support Rep</option>
-                        <option value="Financial Analyst">Financial Analyst</option>
-                    </select><button class="btn-update" id="btn-update-jd">Update</button>
+                        <option value="AI/ML Engineer" data-version="v1.2">AI/ML Engineer</option>
+                        <option value="Software Engineer" data-version="v2.0">Software Engineer</option>
+                        <option value="Product Manager" data-version="v1.0">Product Manager</option>
+                        <option value="Data Scientist" data-version="v1.5">Data Scientist</option>
+                        <option value="Marketing Specialist" data-version="v1.1">Marketing Specialist</option>
+                        <option value="Sales Executive" data-version="v1.0">Sales Executive</option>
+                        <option value="Customer Support Rep" data-version="v1.0">Customer Support Rep</option>
+                        <option value="Financial Analyst" data-version="v2.1">Financial Analyst</option>
+                    </select><button class="btn-update" id="btn-update-jd">Upgrade JD</button>
                 </div>
                 <!-- 4) KPI CARDS SECTION -->
                 <section class="kpi-grid">
@@ -2246,332 +2249,385 @@
                 </div>
                 <!-- 7) TABULAR RESULT -->
                 <section class="table-container">
-                    <div class="panel-title" style="justify-content: flex-start; gap: 5px;">Candidate
-                        Results – <span id="dynamic-jd-title">AI/ML Engineer</span></div>
-                    <table>
-                        <style>
-                            /* Filter Popup Styles */
-                            .th-content {
-                                position: relative;
-                                display: flex;
-                                align-items: center;
-                                justify-content: space-between;
-                                cursor: default;
-                            }
+                    <div class="panel-title" style="justify-content: space-between; gap: 5px; align-items: center;">
+                        <div style="display: flex; gap: 5px;">Resumes Analysed Results – <span
+                                id="dynamic-jd-title">AI/ML Engineer</span></div>
+                        <button class="btn-confirm" id="btn-download-results"
+                            style="padding: 6px 12px; font-size: 0.85rem; background-color: var(--success);">
+                            <i class="fas fa-download" style="margin-right: 6px;"></i>Download Result
+                        </button>
+                    </div>
 
-                            .filter-icon {
-                                color: #cbd5e1;
-                                cursor: pointer;
-                                padding: 4px;
-                                border-radius: 4px;
-                                transition: all 0.2s;
-                                margin-left: 8px;
-                                font-size: 0.8rem;
-                            }
+                    <style>
+                        /* Filter Popup Styles */
+                        .th-content {
+                            position: relative;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            cursor: default;
+                        }
 
-                            .filter-icon:hover {
-                                color: var(--primary);
-                                background: #eff6ff;
-                            }
+                        .th-icons {
+                            display: flex;
+                            align-items: center;
+                            gap: 4px;
+                        }
 
-                            .filter-icon.active {
-                                color: var(--primary);
-                            }
+                        .filter-icon {
+                            color: #cbd5e1;
+                            cursor: pointer;
+                            padding: 4px;
+                            border-radius: 4px;
+                            transition: all 0.2s;
+                            margin-left: 8px;
+                            font-size: 0.8rem;
+                        }
 
-                            .filter-popup {
-                                position: absolute;
-                                top: 100%;
-                                right: 0;
-                                background: white;
-                                border: 1px solid #e2e8f0;
-                                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                                padding: 8px;
-                                border-radius: 6px;
-                                z-index: 100;
-                                min-width: 150px;
-                                display: none;
-                            }
+                        .filter-icon:hover {
+                            color: var(--primary);
+                            background: #eff6ff;
+                        }
 
-                            .filter-popup.show {
-                                display: block;
-                            }
+                        .filter-icon.active {
+                            color: var(--primary);
+                        }
 
-                            .filter-popup input,
-                            .filter-popup select {
-                                width: 100%;
-                                padding: 6px;
-                                border: 1px solid #e2e8f0;
-                                border-radius: 4px;
-                                font-size: 0.85rem;
-                                outline: none;
-                            }
+                        .filter-popup {
+                            position: absolute;
+                            top: 100%;
+                            right: 0;
+                            background: white;
+                            border: 1px solid #e2e8f0;
+                            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                            padding: 8px;
+                            border-radius: 6px;
+                            z-index: 100;
+                            min-width: 150px;
+                            display: none;
+                        }
 
-                            .filter-popup input:focus,
-                            .filter-popup select:focus {
-                                border-color: var(--primary);
-                            }
+                        .filter-popup.show {
+                            display: block;
+                        }
 
-                            /* Center align Score and Status columns (5th to 9th) */
-                            table th:nth-child(5),
-                            table td:nth-child(5),
-                            table th:nth-child(6),
-                            table td:nth-child(6),
-                            table th:nth-child(7),
-                            table td:nth-child(7) {
-                                text-align: center;
-                            }
+                        .filter-popup input,
+                        .filter-popup select {
+                            width: 100%;
+                            padding: 6px;
+                            border: 1px solid #e2e8f0;
+                            border-radius: 4px;
+                            font-size: 0.85rem;
+                            outline: none;
+                        }
 
-                            table th:nth-child(8),
-                            table td:nth-child(8) {
-                                text-align: center;
-                            }
+                        .filter-popup input:focus,
+                        .filter-popup select:focus {
+                            border-color: var(--primary);
+                        }
 
-                            /* Make badges full width block for justified look */
-                            table th:nth-child(8) .badge {
-                                display: block;
-                                width: 100%;
-                                text-align: center;
-                                box-sizing: border-box;
-                            }
+                        /* Center align Score and Status columns (5th to 9th) */
+                        table th:nth-child(5),
+                        table td:nth-child(5),
+                        table th:nth-child(6),
+                        table td:nth-child(6),
+                        table th:nth-child(7),
+                        table td:nth-child(7) {
+                            text-align: center;
+                        }
 
-                            /* Specific content centering for headers */
-                            table th:nth-child(5) .th-content,
-                            table th:nth-child(6) .th-content,
-                            table th:nth-child(7) .th-content {
-                                justify-content: center;
-                                gap: 8px;
-                            }
+                        table th:nth-child(8),
+                        table td:nth-child(8) {
+                            text-align: center;
+                        }
 
-                            /* Override for Duplicates Table - Align Uploaded by (5th col) to left */
-                            #duplicates-table th:nth-child(5),
-                            #duplicates-table td:nth-child(5) {
-                                text-align: left;
-                            }
+                        /* Make badges full width block for justified look */
+                        table th:nth-child(8) .badge {
+                            display: block;
+                            width: 100%;
+                            text-align: center;
+                            box-sizing: border-box;
+                        }
 
-                            #duplicates-table th:nth-child(5) .th-content {
-                                justify-content: flex-start;
-                            }
+                        /* Specific content centering for headers */
+                        table th:nth-child(5) .th-content,
+                        table th:nth-child(6) .th-content,
+                        table th:nth-child(7) .th-content {
+                            justify-content: center;
+                            gap: 8px;
+                        }
 
-                            /* EMPTY STATE STYLES */
-                            .empty-state {
-                                padding: 40px;
-                                text-align: center;
-                                color: var(--text-muted);
-                                display: none;
-                                /* Hidden by default */
-                                background-color: white;
-                                border-bottom: 1px solid #eee;
-                            }
+                        /* Override for Duplicates Table - Align Uploaded by (5th col) to left */
+                        #duplicates-table th:nth-child(5),
+                        #duplicates-table td:nth-child(5) {
+                            text-align: left;
+                        }
 
-                            .empty-state.active {
-                                display: block;
-                            }
+                        #duplicates-table th:nth-child(5) .th-content {
+                            justify-content: flex-start;
+                        }
 
-                            .empty-state-icon {
-                                font-size: 3rem;
-                                color: #e2e8f0;
-                                margin-bottom: 16px;
-                            }
+                        /* EMPTY STATE STYLES */
+                        .empty-state {
+                            padding: 40px;
+                            text-align: center;
+                            color: var(--text-muted);
+                            display: none;
+                            /* Hidden by default */
+                            background-color: white;
+                            border-bottom: 1px solid #eee;
+                        }
 
-                            .empty-state-text {
-                                font-size: 1.1rem;
-                                font-weight: 600;
-                                color: var(--text-dark);
-                                margin-bottom: 8px;
-                            }
+                        .empty-state.active {
+                            display: block;
+                        }
 
-                            .empty-state-subtext {
-                                font-size: 0.9rem;
-                            }
-                        </style>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>SN</th>
-                                    <!-- Filterable -->
-                                    <th>
-                                        <div class="th-content">
-                                            JD Version
-                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
-                                            <div class="filter-popup">
-                                                <select class="table-filter" data-col="jd-version">
-                                                    <option value="all">All</option>
-                                                    <option value="v1.2">v1.2</option>
-                                                    <option value="v1.1">v1.1</option>
-                                                    <option value="v1.0">v1.0</option>
-                                                </select>
-                                            </div>
+                        .empty-state-icon {
+                            font-size: 3rem;
+                            color: #e2e8f0;
+                            margin-bottom: 16px;
+                        }
+
+                        .empty-state-text {
+                            font-size: 1.1rem;
+                            font-weight: 600;
+                            color: var(--text-dark);
+                            margin-bottom: 8px;
+                        }
+
+                        .empty-state-subtext {
+                            font-size: 0.9rem;
+                        }
+                    </style>
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>SN</th>
+                                <!-- Filterable (JD Version - Dropdown only) -->
+                                <th>
+                                    <div class="th-content">
+                                        JD Version
+                                        <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                        <div class="filter-popup">
+                                            <select class="table-filter" data-col="jd-version">
+                                                <option value="all">All</option>
+                                                <option value="v1.2">v1.2</option>
+                                                <option value="v1.1">v1.1</option>
+                                                <option value="v1.0">v1.0</option>
+                                            </select>
                                         </div>
-                                    </th>
-                                    <th>
-                                        <div class="th-content">
-                                            Candidate Name
+                                    </div>
+                                </th>
+                                <!-- Name (Sort + Filter) -->
+                                <th>
+                                    <div class="th-content">
+                                        Candidate Name
+                                        <div class="th-icons">
+                                            <i class="fas fa-sort sort-icon" data-col="name" data-order="asc"></i>
                                             <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
-                                            <div class="filter-popup">
-                                                <input type="text" class="table-filter" data-col="name"
-                                                    placeholder="Search Name">
-                                            </div>
                                         </div>
-                                    </th>
-                                    <th>
-                                        <div class="th-content">
-                                            City
+                                        <div class="filter-popup">
+                                            <input type="text" class="table-filter" data-col="name"
+                                                placeholder="Search Name">
+                                        </div>
+                                    </div>
+                                </th>
+                                <!-- City (Sort + Filter) -->
+                                <th>
+                                    <div class="th-content">
+                                        City
+                                        <div class="th-icons">
+                                            <i class="fas fa-sort sort-icon" data-col="city" data-order="asc"></i>
                                             <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
-                                            <div class="filter-popup">
-                                                <input type="text" class="table-filter" data-col="city"
-                                                    placeholder="Search City">
-                                            </div>
                                         </div>
-                                    </th>
-                                    <th>
-                                        <div class="th-content">
-                                            Total Exp (Yrs)
+                                        <div class="filter-popup">
+                                            <input type="text" class="table-filter" data-col="city"
+                                                placeholder="Search City">
+                                        </div>
+                                    </div>
+                                </th>
+                                <!-- Exp (Sort + Filter) -->
+                                <th>
+                                    <div class="th-content">
+                                        Total Exp (Yrs)
+                                        <div class="th-icons">
+                                            <i class="fas fa-sort sort-icon" data-col="exp" data-order="asc"></i>
                                             <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
-                                            <div class="filter-popup">
-                                                <input type="text" class="table-filter" data-col="exp"
-                                                    placeholder="Ex: 5.0">
-                                            </div>
                                         </div>
-                                    </th>
-                                    <!-- Sortable -->
-                                    <th>
-                                        <div class="th-content">
-                                            Skill Score
+                                        <div class="filter-popup">
+                                            <input type="text" class="table-filter" data-col="exp"
+                                                placeholder="Ex: 5.0">
+                                        </div>
+                                    </div>
+                                </th>
+                                <!-- Skill Score (Sort + Filter) -->
+                                <th>
+                                    <div class="th-content">
+                                        Skill Score
+                                        <div class="th-icons">
                                             <i class="fas fa-sort sort-icon" data-col="skill-score"
                                                 data-order="desc"></i>
+                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
                                         </div>
-                                    </th>
-                                    <!-- Sortable -->
-                                    <th>
-                                        <div class="th-content">
-                                            Overall Score
+                                        <div class="filter-popup">
+                                            <input type="text" class="table-filter" data-col="skill-score"
+                                                placeholder="Ex: 90">
+                                        </div>
+                                    </div>
+                                </th>
+                                <!-- Overall Score (Sort + Filter) -->
+                                <th>
+                                    <div class="th-content">
+                                        Overall Score
+                                        <div class="th-icons">
                                             <i class="fas fa-sort sort-icon" data-col="overall-score"
                                                 data-order="desc"></i>
-                                        </div>
-                                    </th>
-                                    <!-- Filterable -->
-                                    <th>
-                                        <div class="th-content">
-                                            AI Status
                                             <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
-                                            <div class="filter-popup">
-                                                <select class="table-filter" data-col="ai-status">
-                                                    <option value="all">All</option>
-                                                    <option value="fit">Strong Fit</option>
-                                                    <option value="potential">Potential Fit</option>
-                                                    <option value="unfit">Low Match</option>
-                                                    <option value="need info">Border line</option>
-                                                </select>
-                                            </div>
                                         </div>
-                                    </th>
-                                    <!-- Filterable -->
-                                    <th>
-                                        <div class="th-content">
-                                            HR Status
+                                        <div class="filter-popup">
+                                            <input type="text" class="table-filter" data-col="overall-score"
+                                                placeholder="Ex: 8.5">
+                                        </div>
+                                    </div>
+                                </th>
+                                <!-- AI Status (Sort + Filter) -->
+                                <th>
+                                    <div class="th-content">
+                                        AI Status
+                                        <div class="th-icons">
+                                            <i class="fas fa-sort sort-icon" data-col="ai-status" data-order="asc"></i>
                                             <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
-                                            <div class="filter-popup">
-                                                <select class="table-filter" data-col="hr-status">
-                                                    <option value="all">All</option>
-                                                    <option value="fit">Fit</option>
-                                                    <option value="unfit">Unfit</option>
-                                                </select>
-                                            </div>
                                         </div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
-                                    <td><a href="#" class="view-link view-resume-link">Aarav Sharma</a></td>
-                                    <td>Bengaluru</td>
-                                    <td>6.5</td>
-                                    <td>92/100</td>
-                                    <td>9.1</td>
-                                    <td><span class="badge fit">Strong Fit</span></td>
-                                    <td><span class="badge fit">Fit</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
-                                    <td><a href="#" class="view-link view-resume-link">Diya Gupta</a></td>
-                                    <td>Mumbai</td>
-                                    <td>2.0</td>
-                                    <td>81/100</td>
-                                    <td>4.2</td>
-                                    <td><span class="badge potential">Potential Fit</span></td>
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <span class="badge unfit">Unfit</span>
-                                            <i class="fas fa-sticky-note note-icon"
-                                                onmouseenter="showTooltip(event, 'HR Note: Reviewed manually. Value add due to specific domain experience.')"
-                                                onmouseleave="hideTooltip()"></i>
+                                        <div class="filter-popup">
+                                            <select class="table-filter" data-col="ai-status">
+                                                <option value="all">All</option>
+                                                <option value="Strong Fit">Strong Fit</option>
+                                                <option value="Potential Fit">Potential Fit</option>
+                                                <option value="Low Match">Low Match</option>
+                                                <option value="Border line">Border line</option>
+                                            </select>
                                         </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
-                                    <td><a href="#" class="view-link view-resume-link">Vihaan Singh</a></td>
-                                    <td>Delhi</td>
-                                    <td>4.0</td>
-                                    <td>78/100</td>
-                                    <td>7.5</td>
-                                    <td><span class="badge info">Border line</span></td>
-                                    <td><span class="badge unfit">Unfit</span></td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
-                                    <td><a href="#" class="view-link view-resume-link">Priya Patel</a></td>
-                                    <td>Hyderabad</td>
-                                    <td>8.0</td>
-                                    <td>95/100</td>
-                                    <td>9.4</td>
-                                    <td><span class="badge fit">Strong Fit</span></td>
-                                    <td><span class="badge fit">Fit</span></td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
-                                    <td><a href="#" class="view-link view-resume-link">Arjun Kumar</a></td>
-                                    <td>Chennai</td>
-                                    <td>1.5</td>
-                                    <td>30/100</td>
-                                    <td>3.8</td>
-                                    <td><span class="badge unfit">Low Match</span></td>
-                                    <td><span class="badge unfit">Unfit</span></td>
-                                </tr>
-                            </tbody>
-                            <tfoot id="candidate-empty-state" class="empty-state">
-                                <tr>
-                                    <td colspan="100%">
-                                        <div style="padding: 40px; text-align: center;">
-                                            <div class="empty-state-icon"><i class="fas fa-search"></i></div>
-                                            <div class="empty-state-text">No Candidates Found</div>
-                                            <div class="empty-state-subtext">Try adjusting your filters or search terms.
-                                            </div>
+                                    </div>
+                                </th>
+                                <!-- HR Status (Sort + Filter) -->
+                                <th>
+                                    <div class="th-content">
+                                        HR Status
+                                        <div class="th-icons">
+                                            <i class="fas fa-sort sort-icon" data-col="hr-status" data-order="asc"></i>
+                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
                                         </div>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        <!-- 8) PAGINATION -->
-                        <div class="pagination">
-                            <div>Rows per page: <select
-                                    style="padding: 4px; border-radius: 4px; border: 1px solid #ddd;">
-                                    <option>10</option>
-                                    <option>25</option>
-                                    <option>50</option>
-                                </select></div>
-                            <div>1–8 of 325</div>
-                            <div class="page-controls"><button class="page-btn"><i
-                                        class="fas fa-chevron-left"></i></button><button class="page-btn"><i
-                                        class="fas fa-chevron-right"></i></button>
-                            </div>
+                                        <div class="filter-popup">
+                                            <select class="table-filter" data-col="hr-status">
+                                                <option value="all">All</option>
+                                                <option value="Strong Fit">Strong Fit</option>
+                                                <option value="Potential Fit">Potential Fit</option>
+                                                <option value="Unfit">Unfit</option>
+                                                <option value="Hold">Hold</option>
+                                                <option value="Border line">Border line</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
+                                <td><a href="#" class="view-link view-resume-link">Aarav Sharma</a></td>
+                                <td>Bengaluru</td>
+                                <td>6.5</td>
+                                <td>92/100</td>
+                                <td>9.1</td>
+                                <td><span class="badge fit">Strong Fit</span></td>
+                                <td><span class="badge fit">Strong Fit</span></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
+                                <td><a href="#" class="view-link view-resume-link">Diya Gupta</a></td>
+                                <td>Mumbai</td>
+                                <td>2.0</td>
+                                <td>81/100</td>
+                                <td>4.2</td>
+                                <td><span class="badge potential">Potential Fit</span></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="badge unfit">Unfit</span>
+                                        <i class="fas fa-sticky-note note-icon"
+                                            onmouseenter="showTooltip(event, 'HR Note: Reviewed manually. Value add due to specific domain experience.')"
+                                            onmouseleave="hideTooltip()"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
+                                <td><a href="#" class="view-link view-resume-link">Vihaan Singh</a></td>
+                                <td>Delhi</td>
+                                <td>4.0</td>
+                                <td>78/100</td>
+                                <td>7.5</td>
+                                <td><span class="badge info">Border line</span></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="badge info">Hold</span>
+                                        <i class="fas fa-sticky-note note-icon"
+                                            onmouseenter="showTooltip(event, 'HR Note: Candidate requested additional time to confirm interest. Profile temporarily placed on hold.')"
+                                            onmouseleave="hideTooltip()"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
+                                <td><a href="#" class="view-link view-resume-link">Priya Patel</a></td>
+                                <td>Hyderabad</td>
+                                <td>8.0</td>
+                                <td>95/100</td>
+                                <td>9.4</td>
+                                <td><span class="badge fit">Strong Fit</span></td>
+                                <td><span class="badge fit">Strong Fit</span></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
+                                <td><a href="#" class="view-link view-resume-link">Arjun Kumar</a></td>
+                                <td>Chennai</td>
+                                <td>1.5</td>
+                                <td>30/100</td>
+                                <td>3.8</td>
+                                <td><span class="badge unfit">Low Match</span></td>
+                                <td><span class="badge unfit">Unfit</span></td>
+                            </tr>
+                        </tbody>
+                        <tfoot id="candidate-empty-state" class="empty-state">
+                            <tr>
+                                <td colspan="100%">
+                                    <div style="padding: 40px; text-align: center;">
+                                        <div class="empty-state-icon"><i class="fas fa-search"></i></div>
+                                        <div class="empty-state-text">No Candidates Found</div>
+                                        <div class="empty-state-subtext">Try adjusting your filters or search terms.
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!-- 8) PAGINATION -->
+                    <div class="pagination">
+                        <div>Rows per page: <select style="padding: 4px; border-radius: 4px; border: 1px solid #ddd;">
+                                <option>10</option>
+                                <option>25</option>
+                                <option>50</option>
+                            </select></div>
+                        <div>1–8 of 325</div>
+                        <div class="page-controls"><button class="page-btn"><i
+                                    class="fas fa-chevron-left"></i></button><button class="page-btn"><i
+                                    class="fas fa-chevron-right"></i></button>
                         </div>
+                    </div>
                 </section>
                 <!-- JD Versions Table -->
                 <section class="table-container" style="margin-top: 24px;">
@@ -2586,33 +2642,29 @@
                                 <th>Created by</th>
                                 <th>Approved by</th>
                                 <th>Approved Date & Time</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>1</td>
-                                <td>v1.2</td>
+                                <td><a href="#" class="view-link view-jd-link" data-pdf="JD_v1.2.pdf">v1.2</a></td>
                                 <td>Sarah Jenkins</td>
                                 <td>SriLakshmi</td>
                                 <td>2023-10-15 10:30</td>
-                                <td><a href="#" class="view-link"><i class="fas fa-file-pdf"></i>View JD</a></td>
                             </tr>
                             <tr>
                                 <td>2</td>
-                                <td>v1.1</td>
+                                <td><a href="#" class="view-link view-jd-link" data-pdf="JD_v1.1.pdf">v1.1</a></td>
                                 <td>Vishnu Vardhan</td>
                                 <td>SriLakshmi</td>
                                 <td>2023-09-22 15:45</td>
-                                <td><a href="#" class="view-link"><i class="fas fa-file-pdf"></i>View JD</a></td>
                             </tr>
                             <tr>
                                 <td>3</td>
-                                <td>v1.0</td>
+                                <td><a href="#" class="view-link view-jd-link" data-pdf="JD_v1.0.pdf">v1.0</a></td>
                                 <td>Vishnu Vardhan</td>
                                 <td>SriLakshmi</td>
                                 <td>2023-08-10 09:15</td>
-                                <td><a href="#" class="view-link"><i class="fas fa-file-pdf"></i>View JD</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -2620,7 +2672,7 @@
 
                 <!-- Duplicate Resumes Table -->
                 <section class="table-container" style="margin-top: 24px;">
-                    <div class="panel-title">Duplicate Candidates</div>
+                    <div class="panel-title">Duplicate Resumes</div>
                     <table id="duplicates-table">
                         <thead>
                             <tr>
@@ -2834,16 +2886,7 @@
                                 style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
                         </div>
 
-                        <script>
-                            document.getElementById('btn-update-password').addEventListener('click', function (e) {
-                                // Override existing listener or add check?
-                                // Since we can't easily remove anonymous listeners, we'll rely on the existing one
-                                // checking validity, but we need to intercept.
-                                // Actually, simplest is to replace the button clone to strip listeners, 
-                                // or just add the confirmation in the main script block where we defined it.
-                                // But since we are editing snippets, let's find the original listener definition.
-                            });
-                        </script>
+
 
                         <div style="display: flex; gap: 12px;">
                             <button class="btn btn-primary" id="btn-update-password" style="padding: 8px 16px;">Update
@@ -3238,7 +3281,6 @@
                                 <th>Skill Match</th>
                                 <th>AI Status</th>
                                 <th>Overall Score</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="analysis-results-body">
@@ -3252,7 +3294,7 @@
                         style="border: 1px solid #ddd; background: white; color: #333;">Close</button>
                     <button class="btn-confirm" id="btn-export-results"
                         style="background: var(--success); color: white;">
-                        <i class="fas fa-file-export" style="margin-right: 8px;"></i>Export results
+                        <i class="fas fa-file-export" style="margin-right: 8px;"></i>Download result
                     </button>
                 </div>
             </div>
@@ -3370,15 +3412,33 @@
     </div>
     <script>document.addEventListener('DOMContentLoaded', () => {
             // JD Dropdown Logic
+            // JD Dropdown Logic
             const jdSelect = document.querySelector('.jd-select');
             const dynamicTitle = document.getElementById('dynamic-jd-title');
             const dynamicTitleVersions = document.getElementById('dynamic-jd-title-versions');
+            const pageContext = document.querySelector('.page-context');
+
+            // Function to update header
+            const updateHeader = () => {
+                const selectedOption = jdSelect.options[jdSelect.selectedIndex];
+                const version = selectedOption.getAttribute('data-version');
+                const text = selectedOption.value;
+                if (pageContext) {
+                    pageContext.textContent = `Recruiter Dashboard - ${text} - ${version}`;
+                }
+            };
+
+            // Initial Set
+            if (jdSelect && pageContext) {
+                updateHeader();
+            }
 
             if (jdSelect) {
                 jdSelect.addEventListener('change', (e) => {
                     const newValue = e.target.value;
                     if (dynamicTitle) dynamicTitle.textContent = newValue;
                     if (dynamicTitleVersions) dynamicTitleVersions.textContent = newValue;
+                    updateHeader();
                 });
             }
 
@@ -3867,17 +3927,17 @@
             function populateAnalysisResults() {
                 analysisResultsBody.innerHTML = '';
                 const mockResults = [
-                    { sn: 1, name: 'Ravi Teja', skill: '8.5/10', ai: 'Strong Fit', statusClass: 'fit', score: 8.5, action: 'View Resume' },
-                    { sn: 2, name: 'Sita Lakshmi', skill: '9.0/10', ai: 'Strong Fit', statusClass: 'fit', score: 9.2, action: 'View Resume' },
-                    { sn: 3, name: 'Venkatesh D.', skill: '5.0/10', ai: 'Low Match', statusClass: 'unfit', score: 5.4, action: 'View Resume' },
-                    { sn: 4, name: 'Anjali Reddy', skill: '3.0/10', ai: 'Low Match', statusClass: 'unfit', score: 3.2, action: 'View Resume' },
-                    { sn: 5, name: 'Sai Kumar', skill: '7.8/10', ai: 'Potential Fit', statusClass: 'potential', score: 8.0, action: 'View Resume' }
+                    { sn: 1, name: 'Ravi Teja', skill: '8.5/10', ai: 'Strong Fit', statusClass: 'fit', score: 8.5, pdf: 'Ravi_Teja_Resume.pdf' },
+                    { sn: 2, name: 'Sita Lakshmi', skill: '9.0/10', ai: 'Strong Fit', statusClass: 'fit', score: 9.2, pdf: 'Sita_Lakshmi_Resume.pdf' },
+                    { sn: 3, name: 'Venkatesh D.', skill: '5.0/10', ai: 'Low Match', statusClass: 'unfit', score: 5.4, pdf: 'Venkatesh_Duggirala_Resume.pdf' },
+                    { sn: 4, name: 'Anjali Reddy', skill: '3.0/10', ai: 'Low Match', statusClass: 'unfit', score: 3.2, pdf: 'Anjali_Reddy_Resume.pdf' },
+                    { sn: 5, name: 'Sai Kumar', skill: '7.8/10', ai: 'Potential Fit', statusClass: 'potential', score: 8.0, pdf: 'Sai_Kumar_Resume.pdf' }
                 ];
 
                 if (mockResults.length === 0) {
                     analysisResultsBody.innerHTML = `
                          <tr>
-                             <td colspan="6">
+                             <td colspan="5">
                                  <div class="empty-state active" style="border:none;">
                                      <div class="empty-state-icon"><i class="fas fa-clipboard-list"></i></div>
                                      <div class="empty-state-text">No Results to Display</div>
@@ -3892,21 +3952,105 @@
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                             <td>${res.sn}</td>
-                            <td>${res.name}</td>
+                            <td><a href="#" class="view-link view-resume-link" data-pdf="${res.pdf}">${res.name}</a></td>
                             <td>${res.skill}</td>
                             <td><span class="badge ${res.statusClass}">${res.ai}</span></td>
                             <td>${res.score}</td>
-                            <td><a href="#" class="view-link">${res.action}</a></td>
                         `;
                     analysisResultsBody.appendChild(tr);
+                });
+            }
+
+            // Event listener for opening PDF from analysis results
+            if (analysisResultsBody) {
+                analysisResultsBody.addEventListener('click', (e) => {
+                    const link = e.target.closest('.view-resume-link');
+                    if (link) {
+                        e.preventDefault();
+                        const pdfUrl = link.getAttribute('data-pdf');
+                        const candidateName = link.textContent.trim();
+
+                        // Use existing PDF Modal logic if available
+                        const pdfModal = document.getElementById('pdf-viewer-modal');
+                        const pdfFrame = document.getElementById('pdf-frame');
+                        const pdfTitle = document.getElementById('pdf-viewer-title');
+
+                        if (pdfModal && pdfFrame) {
+                            // In a real app, this would be the actual path
+                            // For demo, we might alert or try to open if local file exists
+                            // pdfFrame.src = pdfUrl; 
+                            // Since we don't have actual PDFs, we can just show the modal with a placeholder or alert
+                            // But let's try to set the src to a dummy or the actual file if it was real.
+
+                            // For this task, "view the resume" implies opening the viewer.
+                            if (pdfTitle) pdfTitle.textContent = "Resume: " + candidateName;
+                            // pdfFrame.src = "path/to/resumes/" + pdfUrl; // Mock path
+
+                            // Just showing the modal is usually enough for UI tasks unless specified otherwise
+                            pdfModal.classList.add('active');
+                        } else {
+                            alert("View Resume: " + pdfUrl);
+                        }
+                    }
                 });
             }
 
             // Export Button Logic
             const btnExportResults = document.getElementById('btn-export-results');
             if (btnExportResults) {
-                btnExportResults.addEventListener('click', () => {
-                    alert("Results exported successfully!");
+                btnExportResults.addEventListener('click', async () => {
+                    const mockResults = [
+                        { sn: 1, name: 'Ravi Teja', skill: '8.5/10', ai: 'Strong Fit', statusClass: 'fit', score: 8.5 },
+                        { sn: 2, name: 'Sita Lakshmi', skill: '9.0/10', ai: 'Strong Fit', statusClass: 'fit', score: 9.2 },
+                        { sn: 3, name: 'Venkatesh D.', skill: '5.0/10', ai: 'Low Match', statusClass: 'unfit', score: 5.4 },
+                        { sn: 4, name: 'Anjali Reddy', skill: '3.0/10', ai: 'Low Match', statusClass: 'unfit', score: 3.2 },
+                        { sn: 5, name: 'Sai Kumar', skill: '7.8/10', ai: 'Potential Fit', statusClass: 'potential', score: 8.0 }
+                    ];
+
+                    let csvRows = [];
+                    csvRows.push("SN,Candidate Name,Skill Match,AI Status,Overall Score");
+
+                    mockResults.forEach(function (rowArray) {
+                        let row = `${rowArray.sn},${rowArray.name},"${rowArray.skill}",${rowArray.ai},${rowArray.score}`;
+                        csvRows.push(row);
+                    });
+
+                    const csvString = csvRows.join("\n");
+
+                    // Try user-selected path (modern browsers)
+                    try {
+                        if (window.showSaveFilePicker) {
+                            const handle = await window.showSaveFilePicker({
+                                suggestedName: 'Analysis_Results.csv',
+                                types: [{
+                                    description: 'CSV File',
+                                    accept: { 'text/csv': ['.csv'] },
+                                }],
+                            });
+                            const writable = await handle.createWritable();
+                            await writable.write(csvString);
+                            await writable.close();
+                            alert("File saved successfully!");
+                            return;
+                        }
+                    } catch (err) {
+                        if (err.name !== 'AbortError') {
+                            console.error('Save File Error:', err);
+                            // Fallback if error is not user cancelling
+                        } else {
+                            return; // User cancelled
+                        }
+                    }
+
+                    // Fallback for other browsers or if API fails
+                    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", "Analysis_Results.csv");
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                 });
             }
 
@@ -4228,13 +4372,13 @@
                         if (state.filters['ai-status'] !== 'all' && !item.aiStatus.includes(state.filters['ai-status'])) isMatch = false;
                         if (state.filters['jd-version'] !== 'all' && !item.jdVersion.includes(state.filters['jd-version'])) isMatch = false;
 
-                        // Text Input Filters (partial match, case-insensitive)
-                        if (state.filters['sn'] && !item.sn.toLowerCase().includes(state.filters['sn'].toLowerCase())) isMatch = false;
-                        if (state.filters['name'] && !item.name.toLowerCase().includes(state.filters['name'].toLowerCase())) isMatch = false;
-                        if (state.filters['city'] && !item.city.toLowerCase().includes(state.filters['city'].toLowerCase())) isMatch = false;
-                        if (state.filters['exp'] && !item.exp.toLowerCase().includes(state.filters['exp'].toLowerCase())) isMatch = false;
-                        if (state.filters['skill'] && !item.skillText.includes(state.filters['skill'])) isMatch = false;
-                        if (state.filters['overall'] && !item.overallText.includes(state.filters['overall'])) isMatch = false;
+                        // Text Input Filters (Starts With logic, case-insensitive)
+                        if (state.filters['sn'] && !item.sn.toLowerCase().startsWith(state.filters['sn'].toLowerCase())) isMatch = false;
+                        if (state.filters['name'] && !item.name.toLowerCase().startsWith(state.filters['name'].toLowerCase())) isMatch = false;
+                        if (state.filters['city'] && !item.city.toLowerCase().startsWith(state.filters['city'].toLowerCase())) isMatch = false;
+                        if (state.filters['exp'] && !item.exp.toLowerCase().startsWith(state.filters['exp'].toLowerCase())) isMatch = false;
+                        if (state.filters['skill'] && !item.skillText.startsWith(state.filters['skill'])) isMatch = false;
+                        if (state.filters['overall'] && !item.overallText.startsWith(state.filters['overall'])) isMatch = false;
 
                         item.isMatch = isMatch;
                         if (isMatch) matchCount++;
@@ -4305,13 +4449,26 @@
                         if (col === 'skill-score') {
                             valA = a.skillScore;
                             valB = b.skillScore;
-                        }
-                        else if (col === 'overall-score') {
+                            return order === 'asc' ? valA - valB : valB - valA;
+                        } else if (col === 'overall-score') {
                             valA = a.overallScore;
                             valB = b.overallScore;
-                        }
+                            return order === 'asc' ? valA - valB : valB - valA;
+                        } else if (col === 'exp') {
+                            valA = parseFloat(a.exp) || 0;
+                            valB = parseFloat(b.exp) || 0;
+                            return order === 'asc' ? valA - valB : valB - valA;
+                        } else {
+                            // String sort for others (name, city, status)
+                            if (col === 'name') { valA = a.name.toLowerCase(); valB = b.name.toLowerCase(); }
+                            else if (col === 'city') { valA = a.city.toLowerCase(); valB = b.city.toLowerCase(); }
+                            else if (col === 'ai-status') { valA = a.aiStatus; valB = b.aiStatus; }
+                            else if (col === 'hr-status') { valA = a.hrStatus; valB = b.hrStatus; }
 
-                        return order === 'asc' ? valA - valB : valB - valA;
+                            if (valA < valB) return order === 'asc' ? -1 : 1;
+                            if (valA > valB) return order === 'asc' ? 1 : -1;
+                            return 0;
+                        }
                     });
 
                     // Re-append rows in new order
@@ -4337,12 +4494,17 @@
                         // The icon is the previous element sibling of the popup
                         const popup = filter.closest('.filter-popup');
                         if (popup) {
-                            const icon = popup.previousElementSibling;
-                            if (icon && icon.classList.contains('filter-icon')) {
-                                if (val && val !== 'all') {
-                                    icon.classList.add('active');
-                                } else {
-                                    icon.classList.remove('active');
+                            let icon = popup.previousElementSibling;
+                            if (icon) {
+                                if (icon.classList.contains('th-icons')) {
+                                    icon = icon.querySelector('.filter-icon');
+                                }
+                                if (icon && icon.classList.contains('filter-icon')) {
+                                    if (val && val !== 'all') {
+                                        icon.classList.add('active');
+                                    } else {
+                                        icon.classList.remove('active');
+                                    }
                                 }
                             }
                         } else {
@@ -4636,7 +4798,12 @@
 
                         // Use Candidate Name in title if it's a name link
                         if (link.classList.contains('view-resume-link')) {
-                            title = `Viewing Resume: ${text}`;
+                            // Check if inside duplicates table for specific title requirement
+                            if (link.closest('#duplicates-table')) {
+                                title = `Viewing Resume: ${pdfPath}`;
+                            } else {
+                                title = `Viewing Resume: ${text}`;
+                            }
                         } else {
                             title = 'Viewing Resume: Charesh Reddy';
                         }
@@ -4821,11 +4988,59 @@
                 </div>
 
 
+
+
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" onclick="closeProfileModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="saveProfile()">Update Profile</button>
             </div>
+        </div>
+    </div>
+
+    <!-- PASSWORD UPDATE MODAL -->
+    <div class="modal-overlay" id="password-modal">
+        <div class="modal-container" style="width: 400px; padding: 30px 24px; text-align: center;">
+            <button class="close-btn" onclick="closePasswordModal()"
+                style="position: absolute; top: 16px; right: 16px;"><i class="fas fa-times"></i></button>
+
+            <div style="margin-bottom: 16px;">
+                <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary);"></i>
+            </div>
+
+            <h2 class="modal-title" style="margin-bottom: 8px; font-size: 1.5rem;">Update Password</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Please set a new password for
+                your account.</p>
+
+            <div class="form-group" style="text-align: left; position: relative;">
+                <label class="form-label">Current Password</label>
+                <div style="position: relative;">
+                    <input type="password" class="form-input" id="pwd-current" placeholder="Enter current password"
+                        maxlength="16">
+                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('pwd-current', this)"></i>
+                </div>
+            </div>
+
+            <div class="form-group" style="text-align: left; position: relative;">
+                <label class="form-label">New Password</label>
+                <div style="position: relative;">
+                    <input type="password" class="form-input" id="pwd-new" placeholder="Enter new password"
+                        maxlength="16">
+                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('pwd-new', this)"></i>
+                </div>
+            </div>
+
+            <div class="form-group" style="text-align: left; position: relative;">
+                <label class="form-label">Confirm New Password</label>
+                <div style="position: relative;">
+                    <input type="password" class="form-input" id="pwd-confirm" placeholder="Re-enter new password"
+                        maxlength="16">
+                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('pwd-confirm', this)"></i>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="savePassword()"
+                style="width: 100%; margin-top: 16px; padding: 12px;">Update Password</button>
         </div>
     </div>
 
@@ -5040,6 +5255,85 @@
             display: block;
             opacity: 1;
         }
+
+        /* Password Modal Styles */
+        #password-modal .modal-container {
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            font-family: 'Inter', sans-serif;
+            /* Ensure clean font */
+        }
+
+        #password-modal .modal-title {
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        #password-modal .form-label {
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        #password-modal .form-input {
+            padding: 12px 35px 12px 16px;
+            /* Space for eye icon */
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            background-color: #f8fafc;
+        }
+
+        #password-modal .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background-color: white;
+            outline: none;
+        }
+
+        #password-modal .form-group {
+            margin-bottom: 20px;
+        }
+
+        #password-modal .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        #password-modal .btn-primary:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #cbd5e1;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.2s;
+            z-index: 10;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+
+        /* Remove default password toggle in Edge/IE */
+        input::-ms-reveal,
+        input::-ms-clear {
+            display: none;
+        }
     </style>
 
     <script>
@@ -5075,7 +5369,15 @@
 
         // Filter Popup Logic
         function toggleFilter(icon) {
-            const popup = icon.nextElementSibling;
+            let popup = icon.nextElementSibling;
+            // Handle new structure where icon is inside .th-icons
+            if (!popup) {
+                const wrapper = icon.closest('.th-icons');
+                if (wrapper) {
+                    // The popup is the sibling of the wrapper (.th-icons)
+                    popup = wrapper.nextElementSibling;
+                }
+            }
 
             // Close all other popups
             document.querySelectorAll('.filter-popup').forEach(p => {
@@ -5186,7 +5488,7 @@
         }
 
         function saveProfile() {
-            if (!confirm("Are you sure you want to update your profile?")) return;
+            if (!confirm("Are you sure you want to update your profile details?")) return;
 
             const saveBtn = document.querySelector('#profile-modal .btn-primary');
             const originalText = saveBtn.innerText;
@@ -5196,10 +5498,139 @@
             setTimeout(() => {
                 saveBtn.innerText = originalText;
                 saveBtn.disabled = false;
-                alert("Profile updated successfully!");
+                alert("Profile details updated successfully!");
                 closeProfileModal();
-            }, 500);
+            }, 800);
         }
+
+        // Password Modal Logic
+        function openPasswordModal() {
+            // Close profile dropdown if open
+            const dropdown = document.getElementById('profile-dropdown');
+            if (dropdown) dropdown.classList.remove('show');
+
+            document.getElementById('password-modal').classList.add('active');
+        }
+
+        function closePasswordModal() {
+            document.getElementById('password-modal').classList.remove('active');
+            // Clear fields on close
+            document.getElementById('pwd-current').value = '';
+            document.getElementById('pwd-new').value = '';
+            document.getElementById('pwd-confirm').value = '';
+        }
+
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function savePassword() {
+            const curr = document.getElementById('pwd-current').value;
+            const newP = document.getElementById('pwd-new').value;
+            const confP = document.getElementById('pwd-confirm').value;
+
+            if (!curr || !newP || !confP) {
+                alert("Please fill in all password fields.");
+                return;
+            }
+
+            // Password Strength Validation
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+            if (!passwordRegex.test(newP)) {
+                alert("Password must be between 8-16 characters long and include:\n- One uppercase letter\n- One lowercase letter\n- One number\n- One special symbol (@$!%*?&)");
+                return;
+            }
+
+            if (newP !== confP) {
+                alert("New passwords do not match!");
+                return;
+            }
+
+            const btn = document.querySelector('#password-modal .btn-primary');
+            const originalText = btn.innerText;
+            btn.innerText = 'Updating...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                alert("Password updated successfully!");
+                closePasswordModal();
+            }, 800);
+        }
+        // Initialize Password Toggle Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const togglePwdBtn = document.getElementById('toggle-password-btn');
+            if (togglePwdBtn) {
+                togglePwdBtn.addEventListener('click', function () {
+                    const section = document.getElementById('password-section');
+                    if (section.style.display === 'none') {
+                        section.style.display = 'block';
+                        this.textContent = 'Cancel Change Password';
+                        this.style.color = 'var(--danger)';
+                    } else {
+                        section.style.display = 'none';
+                        this.textContent = 'Change Password';
+                        this.style.color = ''; // Reset color
+                        // Clear fields
+                        if (document.getElementById('p-current-password')) document.getElementById('p-current-password').value = '';
+                        if (document.getElementById('p-new-password')) document.getElementById('p-new-password').value = '';
+                        if (document.getElementById('p-confirm-password')) document.getElementById('p-confirm-password').value = '';
+                    }
+                });
+            }
+
+            // Save Password Logic
+            const btnSavePassword = document.getElementById('btn-save-password');
+            if (btnSavePassword) {
+                btnSavePassword.addEventListener('click', function () {
+                    const curr = document.getElementById('p-current-password').value;
+                    const newP = document.getElementById('p-new-password').value;
+                    const confP = document.getElementById('p-confirm-password').value;
+
+                    if (!curr || !newP || !confP) {
+                        alert("Please fill in all password fields.");
+                        return;
+                    }
+
+                    // Password Strength Validation
+                    // Min 8 chars, Upper, Lower, Number, Special Symbol
+                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                    if (!passwordRegex.test(newP)) {
+                        alert("Password must be at least 8 characters long and include:\n- One uppercase letter\n- One lowercase letter\n- One number\n- One special symbol (@$!%*?&)");
+                        return;
+                    }
+
+                    if (newP !== confP) {
+                        alert("New passwords do not match!");
+                        return;
+                    }
+
+                    const originalText = this.innerText;
+                    this.innerText = 'Saving...';
+                    this.disabled = true;
+
+                    setTimeout(() => {
+                        this.innerText = originalText;
+                        this.disabled = false;
+                        alert("Password updated successfully!");
+
+                        // Reset UI
+                        const toggleBtn = document.getElementById('toggle-password-btn');
+                        if (toggleBtn) toggleBtn.click();
+                    }, 500);
+                });
+            }
+        });
 
         // --- FOCUS TRAP UTILITY ---
         function trapFocus(element) {
@@ -5252,6 +5683,254 @@
         document.getElementById('profile-modal').addEventListener('click', (e) => {
             if (e.target.id === 'profile-modal') {
                 closeProfileModal();
+            }
+        });
+        // --- UPGRADE JD MODAL LOGIC ---
+        const btnUpdateJd = document.getElementById('btn-update-jd');
+        const jdUpdateModal = document.getElementById('jd-update-modal');
+        const jdCloseBtn = document.getElementById('jd-close-btn');
+        const jdCancelBtn = document.getElementById('jd-cancel-btn');
+        const jdSubmitBtn = document.getElementById('jd-submit-btn');
+        const jdDropzone = document.getElementById('jd-dropzone');
+        const jdFileInput = document.getElementById('jd-file-input');
+        const jdFilename = document.getElementById('jd-filename');
+        const jdFileInfo = document.getElementById('jd-file-info');
+
+        if (btnUpdateJd) {
+            btnUpdateJd.addEventListener('click', () => {
+                if (jdUpdateModal) jdUpdateModal.classList.add('active');
+            });
+        }
+
+        function closeJdModal() {
+            if (jdUpdateModal) jdUpdateModal.classList.remove('active');
+            // Reset fields
+            setTimeout(() => {
+                if (jdFileInput) jdFileInput.value = '';
+                if (jdFilename) jdFilename.textContent = '';
+                if (jdFileInfo) jdFileInfo.style.display = 'none';
+                if (jdSubmitBtn) jdSubmitBtn.disabled = true;
+                if (jdDropzone) jdDropzone.style.display = 'block';
+            }, 300);
+        }
+
+        if (jdCloseBtn) jdCloseBtn.addEventListener('click', closeJdModal);
+        if (jdCancelBtn) jdCancelBtn.addEventListener('click', closeJdModal);
+
+        // Close on click outside
+        if (jdUpdateModal) {
+            jdUpdateModal.addEventListener('click', (e) => {
+                if (e.target === jdUpdateModal) closeJdModal();
+            });
+        }
+
+        // Drag & Drop for Upgrade JD
+        if (jdDropzone) {
+            jdDropzone.addEventListener('click', () => jdFileInput && jdFileInput.click());
+
+            jdDropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                jdDropzone.classList.add('dragover');
+            });
+
+            jdDropzone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                jdDropzone.classList.remove('dragover');
+            });
+
+            jdDropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                jdDropzone.classList.remove('dragover');
+                if (e.dataTransfer.files.length > 0) {
+                    handleJdFile(e.dataTransfer.files[0]);
+                }
+            });
+        }
+
+        if (jdFileInput) {
+            jdFileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleJdFile(e.target.files[0]);
+                }
+            });
+        }
+
+        function handleJdFile(file) {
+            if (file.type !== 'application/pdf') {
+                alert("Please upload a PDF file.");
+                return;
+            }
+            if (jdFilename) jdFilename.textContent = file.name;
+            if (jdDropzone) jdDropzone.style.display = 'none';
+            if (jdFileInfo) jdFileInfo.style.display = 'flex';
+            if (jdSubmitBtn) jdSubmitBtn.disabled = false;
+        }
+
+        if (jdSubmitBtn) {
+            jdSubmitBtn.addEventListener('click', () => {
+                const btnText = jdSubmitBtn.innerText;
+                jdSubmitBtn.innerText = 'Submitting...';
+                jdSubmitBtn.disabled = true;
+
+                setTimeout(() => {
+                    alert("Job Description submitted for HR approval!");
+                    closeJdModal();
+                    jdSubmitBtn.innerText = btnText;
+                }, 1000);
+            });
+        }
+
+        // --- TABLE FILTER & DOWNLOAD LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const table = document.getElementById('results-table');
+            const tbody = table ? table.querySelector('tbody') : null;
+            const filters = document.querySelectorAll('.table-filter');
+            const emptyState = document.getElementById('candidate-empty-state');
+            const downloadBtn = document.getElementById('btn-download-results');
+
+            console.log("Download Script Loaded");
+            console.log("Table Found:", !!table);
+            console.log("Download Button Found:", !!downloadBtn);
+
+
+            // 1. Filter Logic
+            function filterTable() {
+                const rows = tbody.querySelectorAll('tr');
+                let visibleCount = 0;
+
+                rows.forEach(row => {
+                    let show = true;
+
+                    filters.forEach(filter => {
+                        if (!show) return; // Optimization
+
+                        const col = filter.getAttribute('data-col');
+                        const val = filter.value.toLowerCase();
+                        const tagName = filter.tagName.toLowerCase(); // 'input' or 'select'
+
+                        if (val === 'all' || val === '') return;
+
+                        let cellText = '';
+                        // Map data-col to column index (0-based)
+                        let cellIndex = -1;
+                        switch (col) {
+                            case 'jd-version': cellIndex = 1; break;
+                            case 'name': cellIndex = 2; break;
+                            case 'city': cellIndex = 3; break;
+                            case 'exp': cellIndex = 4; break;
+                            case 'skill-score': cellIndex = 5; break;
+                            case 'overall-score': cellIndex = 6; break;
+                            case 'ai-status': cellIndex = 7; break;
+                            case 'hr-status': cellIndex = 8; break;
+                        }
+
+                        if (cellIndex > -1) {
+                            const cell = row.children[cellIndex];
+                            if (cell) {
+                                cellText = cell.textContent.trim().toLowerCase();
+
+                                // Strict match for Selects (Status/Versions), Partial for Inputs
+                                if (tagName === 'select') {
+                                    if (cellText !== val) {
+                                        show = false;
+                                    }
+                                } else {
+                                    if (!cellText.includes(val)) {
+                                        show = false;
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    row.style.display = show ? '' : 'none';
+                    if (show) visibleCount++;
+                });
+
+                // Toggle Empty State
+                if (visibleCount === 0) {
+                    if (emptyState) emptyState.classList.add('active');
+                } else {
+                    if (emptyState) emptyState.classList.remove('active');
+                }
+            }
+
+            // Attach listeners
+            filters.forEach(f => {
+                f.addEventListener('input', filterTable);
+                f.addEventListener('change', filterTable);
+            });
+
+
+            // 2. Download Logic
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', async () => {
+                    const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => r.style.display !== 'none');
+
+                    if (rows.length === 0) {
+                        alert("No data to download!");
+                        return;
+                    }
+
+                    // Build CSV
+                    let csvContent = "";
+
+                    // Headers
+                    const headers = ["SN", "JD Version", "Candidate Name", "City", "Total Exp", "Skill Score", "Overall Score", "AI Status", "HR Status"];
+                    csvContent += headers.join(",") + "\n";
+
+                    // Data
+                    rows.forEach(row => {
+                        const cols = row.querySelectorAll('td');
+                        const rowData = [];
+                        // We strictly want columns 0 to 8 (9 columns) matching our headers
+                        // SN is col 0
+                        for (let i = 0; i <= 8; i++) {
+                            let text = cols[i] ? cols[i].textContent.trim().replace(/"/g, '""') : ""; // Escape quotes
+                            if (text.includes(',')) text = `"${text}"`; // Quote if comma
+                            rowData.push(text);
+                        }
+                        csvContent += rowData.join(",") + "\n";
+                    });
+
+                    // File Save Logic
+                    const filename = `Resumes_Analysed_Report_${new Date().toISOString().slice(0, 10)}.csv`;
+
+                    if (window.showSaveFilePicker) {
+                        try {
+                            const handle = await window.showSaveFilePicker({
+                                suggestedName: filename,
+                                types: [{
+                                    description: 'CSV File',
+                                    accept: { 'text/csv': ['.csv'] },
+                                }],
+                            });
+                            const writable = await handle.createWritable();
+                            await writable.write(csvContent);
+                            await writable.close();
+                            alert("File downloaded successfully!");
+                        } catch (err) {
+                            if (err.name !== 'AbortError') {
+                                console.error('SaveFilePicker failed:', err);
+                                fallbackDownload(csvContent, filename);
+                            }
+                        }
+                    } else {
+                        fallbackDownload(csvContent, filename);
+                    }
+                });
+            }
+
+            function fallbackDownload(content, filename) {
+                const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
         });
     </script>
