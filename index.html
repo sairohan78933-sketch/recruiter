@@ -247,7 +247,7 @@
         /* 4) KPI CARDS SECTION */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 16px;
             margin-bottom: 24px;
         }
@@ -286,12 +286,7 @@
         }
 
         /* 5 & 6) CHARTS & ALERTS ROW */
-        .insights-row {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
+
 
         .panel {
             background-color: white;
@@ -309,105 +304,77 @@
             justify-content: space-between;
         }
 
-        /* Donut Chart Implementation */
-        .chart-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-        }
 
-        .donut-chart {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            /* Conic Gradient: Success 12.3%, Primary 11.7% (Total Fit 24%), Danger 61%, Warning 15% */
-            background: conic-gradient(var(--success) 0deg 44.3deg,
-                    var(--primary) 44.3deg 86.4deg,
-                    var(--danger) 86.4deg 306deg,
-                    var(--warning) 306deg 360deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
 
-        .donut-hole {
-            width: 90px;
-            height: 90px;
-            background-color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .legend {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 0.85rem;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .dot.success {
-            background-color: var(--success);
-        }
-
-        .dot.danger {
-            background-color: var(--danger);
-        }
-
-        .dot.warning {
-            background-color: var(--warning);
-        }
-
-        .dot.primary {
-            background-color: var(--primary);
-        }
-
-        /* Alerts */
-        .alert-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .alert-item:last-child {
-            border-bottom: none;
-        }
-
-        .alert-icon {
-            color: var(--danger);
-            margin-top: 2px;
-        }
-
+        /* 7) TABULAR RESULT */
         /* 7) TABULAR RESULT */
         .table-container {
             background-color: white;
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            /* Removed global overflow-x: auto to protect other tables */
         }
 
+        /* Scoped Container for Resumes Table */
+        /* Scoped Container for Resumes Table */
+        /* #results-table-container inherits .table-container styles */
+
+        .table-scroll-wrapper {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 500px;
+            /* Enable vertical scroll */
+            position: relative;
+            margin-top: 10px;
+            border: 1px solid #f0f0f0;
+            /* Subtle border for scroll area */
+            border-radius: 6px;
+
+            /* Custom Scrollbar Styling (Firefox) */
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+        }
+
+        /* Webkit Scrollbar Styling (Chrome/Edge/Safari) */
+        .table-scroll-wrapper::-webkit-scrollbar {
+            height: 8px;
+            /* Horizontal scrollbar height */
+            width: 8px;
+            /* Vertical scrollbar width */
+        }
+
+        .table-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .table-scroll-wrapper::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+            border: 2px solid #f1f5f9;
+            /* Creates padding effect */
+        }
+
+        .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background-color: #94a3b8;
+        }
+
+        /* Generic Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
+            /* Default for others */
             margin-top: 12px;
+        }
+
+        /* Scoped Table Styles for Resumes */
+        #results-table {
+            border-collapse: separate;
+            /* Required for sticky */
+            border-spacing: 0;
+            min-width: 1600px;
+            /* Reduced from 2200px to decrease scroll */
         }
 
         th {
@@ -418,6 +385,7 @@
             font-weight: 600;
             font-size: 0.85rem;
             border-bottom: 2px solid var(--card-bg);
+            white-space: nowrap;
         }
 
         td {
@@ -425,6 +393,94 @@
             border-bottom: 1px solid #eee;
             font-size: 0.9rem;
             color: var(--text-dark);
+            white-space: nowrap;
+            background-color: white;
+        }
+
+        /* Sticky Header for Resumes Table */
+        #results-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: var(--background);
+            /* Match th bg */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Sticky Column Styles */
+        .sticky-col {
+            position: sticky;
+            background-color: white;
+            z-index: 2;
+        }
+
+        /* Sticky Header + Sticky Col Intersection */
+        .table-scroll-wrapper thead th.sticky-col {
+            background-color: var(--background) !important;
+            z-index: 12 !important;
+            /* Top-Most */
+        }
+
+        /* Explicit Widths for Sticky Columns to prevent gaps */
+        /* SN: Left 0, Width 60px */
+        #results-table th:nth-child(1),
+        #results-table td:nth-child(1),
+        #analysis-results-table th:nth-child(1),
+        #analysis-results-table td:nth-child(1) {
+            min-width: 60px;
+            max-width: 60px;
+            width: 60px;
+        }
+
+        /* JD Version (Main) / Name (Popup): Position depends on table */
+        #results-table th:nth-child(2),
+        #results-table td:nth-child(2) {
+            min-width: 120px;
+            max-width: 120px;
+            width: 120px;
+        }
+
+        /* Candidate Name (Popup): Width 180px */
+        #analysis-results-table th:nth-child(2),
+        #analysis-results-table td:nth-child(2) {
+            min-width: 180px;
+            max-width: 180px;
+            width: 180px;
+        }
+
+        /* Candidate Name (Main): Left 180px */
+        #results-table th:nth-child(3),
+        #results-table td:nth-child(3) {
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px;
+        }
+
+        /* AI Status: Right 0, Width 130px */
+        #results-table th:nth-child(12),
+        #results-table td:nth-child(12),
+        #analysis-results-table th:nth-child(11),
+        #analysis-results-table td:nth-child(11) {
+            min-width: 130px;
+            max-width: 130px;
+            width: 130px;
+        }
+
+        /* HR Status: Right 0 */
+        #results-table th:nth-child(13),
+        #results-table td:nth-child(13) {
+            min-width: 140px;
+        }
+
+        .sticky-col-left {
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            clip-path: inset(0 -5px 0 0);
+            /* Prevent shadow overlap issue */
+        }
+
+        .sticky-col-right {
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
+            clip-path: inset(0 0 0 -5px);
         }
 
         /* Status Badges */
@@ -568,6 +624,116 @@
             color: #005c70;
         }
 
+        /* --- GLOBAL MODAL STYLES (NEW) --- */
+        .global-modal-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary);
+            /* DashBoard Blue */
+            border-radius: 12px 12px 0 0;
+            flex-shrink: 0;
+        }
+
+        .global-modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.02em;
+        }
+
+        .global-close-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            /* Increased size */
+            color: #FC4860;
+            /* Red (var(--danger)) */
+            cursor: pointer;
+            width: 44px;
+            /* Increased width */
+            height: 44px;
+            /* Increased height */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .global-close-btn:hover {
+            background-color: #f1f5f9;
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .global-modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            /* bg color can be overridden per modal if needed */
+        }
+
+        .global-modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #1e293b1a;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background-color: #f8fafc;
+            /* Slight contrast for footer */
+            border-radius: 0 0 12px 12px;
+            flex-shrink: 0;
+        }
+
+        /* Global Button Overrides for consistency */
+        .btn-cancel-global {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #FC4860;
+            background: #fee2e2;
+            color: #FC4860;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel-global:hover {
+            background-color: #FC4860;
+            color: white;
+        }
+
+        .btn-primary-global {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(74, 98, 221, 0.2);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary-global:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(74, 98, 221, 0.25);
+        }
+
+        .btn-primary-global:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
         /* MODAL STYLES */
         .modal-overlay {
             position: fixed;
@@ -622,11 +788,76 @@
             color: var(--primary);
         }
 
+        /* Resume Selection Table Styles */
+        .resume-selection-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .resume-selection-table thead th {
+            background: #f8fafc;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #64748b;
+            border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .resume-selection-table tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .resume-selection-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .resume-selection-table tbody tr.selected {
+            background-color: #eff6ff;
+        }
+
+        .resume-selection-table td {
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            color: #334155;
+            vertical-align: middle;
+        }
+
+        .resume-selection-table .checkbox-cell {
+            width: 40px;
+            text-align: center;
+        }
+
+        .resume-selection-table .candidate-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .resume-selection-table .contact-info {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* Resume Summary in modal (removed, but keeping style if needed elsewhere) */
+        .resume-info .resume-summary {
+            display: none;
+        }
+
         .modal-body {
             padding: 24px;
             background-color: #f0f7ff;
             /* Light blue background as in image */
             overflow-y: auto;
+            max-height: 60vh;
         }
 
         /* JD Card in Modal */
@@ -1515,11 +1746,11 @@
             max-height: 95vh;
         }
 
-        #pdf-viewer-modal .modal-body {
+        #pdf-viewer-modal .global-modal-body {
             padding: 0;
             display: flex;
             flex-direction: column;
-            height: 100%;
+            flex: 1;
             background-color: #525659;
             /* Standard PDF viewer bg color */
         }
@@ -1816,6 +2047,58 @@
             font-size: 0.85rem;
             color: var(--text-muted);
         }
+
+        /* JD Status Badge */
+        .jd-status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-left: 12px;
+            display: inline-block;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .status-inactive {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .status-disapproved {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fee2e2;
+        }
+
+        /* Dropdown Option Colors */
+        option.opt-active {
+            color: #166534;
+            font-weight: 600;
+        }
+
+        option.opt-inactive {
+            color: #991b1b;
+        }
+
+        option.opt-disapproved {
+            color: #64748b;
+        }
+
+        /* Disabled Button State */
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+            pointer-events: none;
+            background-color: #94a3b8 !important;
+            color: #e2e8f0 !important;
+        }
     </style>
 </head>
 
@@ -1827,7 +2110,7 @@
             <div class="page-context">Recruiter Dashboard</div>
         </div>
         <div class="header-right"><span>Welcome back,
-                Sarah !</span>
+                Nikhil Sai !</span>
 
             <!-- Notification Container -->
             <div class="notification-container" style="position: relative; margin-right: 15px;">
@@ -1879,7 +2162,7 @@
             </div>
             <div class="user-profile-container" style="position: relative;">
                 <div class="user-profile" onclick="toggleProfileDropdown()">
-                    <div class="avatar">S</div>
+                    <div class="avatar">N</div>
                 </div>
                 <!-- Profile Dropdown Menu -->
                 <div class="profile-dropdown" id="profile-dropdown">
@@ -2129,16 +2412,28 @@
             <div id="view-dashboard">
                 <!-- 3) JOB CONTEXT HEADER -->
                 <div class="job-context-header">
-                    <div class="jd-icon"><i class="fas fa-briefcase"></i></div><select class="jd-select">
-                        <option value="AI/ML Engineer" data-version="v1.2">AI/ML Engineer</option>
-                        <option value="Software Engineer" data-version="v2.0">Software Engineer</option>
-                        <option value="Product Manager" data-version="v1.0">Product Manager</option>
-                        <option value="Data Scientist" data-version="v1.5">Data Scientist</option>
-                        <option value="Marketing Specialist" data-version="v1.1">Marketing Specialist</option>
-                        <option value="Sales Executive" data-version="v1.0">Sales Executive</option>
-                        <option value="Customer Support Rep" data-version="v1.0">Customer Support Rep</option>
-                        <option value="Financial Analyst" data-version="v2.1">Financial Analyst</option>
-                    </select><button class="btn-update" id="btn-update-jd">Upgrade JD</button>
+                    <div class="jd-icon"><i class="fas fa-briefcase"></i></div><select class="jd-select" id="jd-select">
+                        <option value="AI/ML Engineer" data-version="v1.2" data-status="active" class="opt-active">AI/ML
+                            Engineer</option>
+                        <option value="Software Engineer" data-version="v2.0" data-status="active" class="opt-active">
+                            Software Engineer</option>
+                        <option value="Product Manager" data-version="v1.0" data-status="disapproved"
+                            class="opt-disapproved">Product Manager</option>
+                        <option value="Data Scientist" data-version="v1.5" data-status="active" class="opt-active">Data
+                            Scientist</option>
+                        <option value="Marketing Specialist" data-version="v1.1" data-status="inactive"
+                            class="opt-inactive">Marketing Specialist</option>
+                        <option value="Sales Executive" data-version="v1.0" data-status="inactive" class="opt-inactive">
+                            Sales Executive</option>
+                        <option value="Customer Support Rep" data-version="v1.0" data-status="active"
+                            class="opt-active">Customer Support Rep</option>
+                        <option value="Financial Analyst" data-version="v2.1" data-status="disapproved"
+                            class="opt-disapproved">Financial Analyst</option>
+                    </select>
+                    <a href="#" id="current-jd-version" class="view-link view-jd-link"
+                        style="background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; margin: 0 10px; display: inline-block; text-decoration: none; cursor: pointer;">v1.2</a>
+                    <span id="jd-status-label" class="jd-status-badge status-active">Approved and Active</span>
+                    <button class="btn-update" id="btn-update-jd">Update JD</button>
                 </div>
                 <!-- 4) KPI CARDS SECTION -->
                 <section class="kpi-grid">
@@ -2160,102 +2455,33 @@
                         <div class="kpi-sub">11.7% of total</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-header"><span>Low Match</span><i class="fas fa-times-circle"
-                                style="color: var(--danger);"></i></div>
-                        <div class="kpi-value" style="color: var(--danger);">198</div>
-                        <div class="kpi-sub">60.9% of total</div>
-                    </div>
-                    <div class="kpi-card">
                         <div class="kpi-header"><span>Border line</span><i class="fas fa-exclamation-triangle"
                                 style="color: #F57C00;"></i></div>
                         <div class="kpi-value" style="color: #F57C00;">49</div>
                         <div class="kpi-sub">15.1% of total</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-header"><span>Avg. JD Match</span><i class="fas fa-chart-line"
-                                style="color: var(--primary);"></i></div>
-                        <div class="kpi-value">7.4 <span style="font-size: 1rem; color: #666;">/ 10</span>
-                        </div>
-                        <div class="kpi-sub" style="color: black; font-weight: 700;"><i
-                                class="fas fa-check"></i>Completed
-                        </div>
+                        <div class="kpi-header"><span>Low Match</span><i class="fas fa-times-circle"
+                                style="color: var(--danger);"></i></div>
+                        <div class="kpi-value" style="color: var(--danger);">198</div>
+                        <div class="kpi-sub">60.9% of total</div>
                     </div>
-                </section>
-                <!-- 5 & 6) CHARTS & ALERTS -->
-                <div class="insights-row">
-                    <!-- Donut Chart -->
-                    <div class="panel">
-                        <div class="panel-title">Candidate Classification</div>
-                        <div class="chart-container">
-                            <div class="donut-chart">
-                                <div class="donut-hole">
-                                    <div style="font-weight: 700; font-size: 1.5rem;">325</div>
-                                    <div style="font-size: 0.7rem; color: #666;">Total</div>
-                                </div>
-                            </div>
-                            <div class="legend">
-                                <div class="legend-item">
-                                    <div class="dot success"></div>Strong Fit (12.3%)
-                                </div>
-                                <div class="legend-item">
-                                    <div class="dot primary"></div>Potential Fit (11.7%)
-                                </div>
-                                <div class="legend-item">
-                                    <div class="dot danger"></div>Low Match (60.9%)
-                                </div>
-                                <div class="legend-item">
-                                    <div class="dot warning"></div>Border line (15.1%)
-                                </div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 15px; font-size: 0.75rem; color: #888; text-align: center;">
-                            * Data derived from AI resume analysis </div>
-                    </div>
-                    <!-- Alerts -->
-                    <div class="panel">
-                        <div class="panel-title"><span>Alerts & Insights</span><i class="fas fa-robot"
-                                style="color: var(--info);"></i></div>
-                        <div class="alert-list">
-                            <div class="alert-item"><i class="fas fa-exclamation-circle alert-icon"></i>
-                                <div>
-                                    <div style="font-weight: 600; font-size: 0.9rem;">Low Match
-                                        Alert</div>
-                                    <div style="font-size: 0.85rem; color: #555;">Only 8%
-                                        candidates have Python skills,
-                                        which is critical for this JD.</div>
-                                </div>
-                            </div>
-                            <div class="alert-item"><i class="fas fa-certificate alert-icon"
-                                    style="color: #F57C00;"></i>
-                                <div>
-                                    <div style="font-weight: 600; font-size: 0.9rem;">
-                                        Certification Missing</div>
-                                    <div style="font-size: 0.85rem; color: #555;">AWS
-                                        Certification missing in 23% of "Fit"
 
-                                        resumes.</div>
-                                </div>
-                            </div>
-                            <div class="alert-item"><i class="fas fa-history alert-icon"></i>
-                                <div>
-                                    <div style="font-weight: 600; font-size: 0.9rem;">Experience
-                                        Mismatch</div>
-                                    <div style="font-size: 0.85rem; color: #555;">High mismatch
-                                        for 5+years experience requirement.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </section>
                 <!-- 7) TABULAR RESULT -->
-                <section class="table-container">
+                <section class="table-container" id="results-table-container">
                     <div class="panel-title" style="justify-content: space-between; gap: 5px; align-items: center;">
                         <div style="display: flex; gap: 5px;">Resumes Analysed Results – <span
                                 id="dynamic-jd-title">AI/ML Engineer</span></div>
-                        <button class="btn-confirm" id="btn-download-results"
-                            style="padding: 6px 12px; font-size: 0.85rem; background-color: var(--success);">
-                            <i class="fas fa-download" style="margin-right: 6px;"></i>Download Result
-                        </button>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button id="btn-clear-filters" class="btn-clear" style="display: none;">
+                                <i class="fas fa-undo-alt" style="margin-right: 6px;"></i>Clear All
+                            </button>
+                            <button class="btn-confirm" id="btn-download-results"
+                                style="padding: 6px 12px; font-size: 0.85rem; background-color: var(--success);">
+                                <i class="fas fa-download" style="margin-right: 6px;"></i>Download Result
+                            </button>
+                        </div>
                     </div>
 
                     <style>
@@ -2324,6 +2550,35 @@
                         .filter-popup input:focus,
                         .filter-popup select:focus {
                             border-color: var(--primary);
+                        }
+
+                        /* Clear All Button - Premium Ghost Style */
+                        .btn-clear {
+                            background: transparent;
+                            border: 1px solid #e2e8f0;
+                            color: #64748b;
+                            padding: 6px 14px;
+                            border-radius: 8px;
+                            font-size: 0.85rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+
+                        .btn-clear:hover {
+                            background-color: #f8fafc;
+                            border-color: var(--primary);
+                            color: var(--primary);
+                            transform: translateY(-1px);
+                            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+                        }
+
+                        .btn-clear:active {
+                            transform: translateY(0);
+                            background-color: #f1f5f9;
                         }
 
                         /* Center align Score and Status columns (5th to 9th) */
@@ -2399,220 +2654,195 @@
                             font-size: 0.9rem;
                         }
                     </style>
-                    <table id="results-table">
-                        <thead>
-                            <tr>
-                                <th>SN</th>
-                                <!-- Filterable (JD Version - Dropdown only) -->
-                                <th>
-                                    <div class="th-content">
-                                        JD Version
-                                        <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
-                                        <div class="filter-popup">
-                                            <select class="table-filter" data-col="jd-version">
-                                                <option value="all">All</option>
-                                                <option value="v1.2">v1.2</option>
-                                                <option value="v1.1">v1.1</option>
-                                                <option value="v1.0">v1.0</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </th>
-                                <!-- Name (Sort + Filter) -->
-                                <th>
-                                    <div class="th-content">
-                                        Candidate Name
-                                        <div class="th-icons">
-                                            <i class="fas fa-sort sort-icon" data-col="name" data-order="asc"></i>
+                    <div class="table-scroll-wrapper">
+                        <table id="results-table">
+                            <thead>
+                                <tr>
+                                    <th class="sticky-col sticky-col-left" style="left: 0; z-index: 3;">SN</th>
+                                    <!-- Filterable (JD Version - Dropdown only) -->
+                                    <th class="sticky-col sticky-col-left" style="left: 60px; z-index: 3;">
+                                        <div class="th-content">
+                                            JD Version
                                             <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            <div class="filter-popup">
+                                                <select class="table-filter" data-col="jd-version">
+                                                    <option value="all">All</option>
+                                                    <option value="v1.2">v1.2</option>
+                                                    <option value="v1.1">v1.1</option>
+                                                    <option value="v1.0">v1.0</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="filter-popup">
-                                            <input type="text" class="table-filter" data-col="name"
-                                                placeholder="Search Name">
+                                    </th>
+                                    <!-- Name (Sort + Filter) -->
+                                    <th class="sticky-col sticky-col-left"
+                                        style="left: 180px; z-index: 3; min-width: 200px;">
+                                        <div class="th-content">
+                                            Candidate Name
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="name" data-order="asc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="name"
+                                                    placeholder="Search Name">
+                                            </div>
                                         </div>
-                                    </div>
-                                </th>
-                                <!-- City (Sort + Filter) -->
-                                <th>
-                                    <div class="th-content">
-                                        City
-                                        <div class="th-icons">
-                                            <i class="fas fa-sort sort-icon" data-col="city" data-order="asc"></i>
-                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                    </th>
+                                    <!-- City (Sort + Filter) -->
+                                    <th style="min-width: 150px;">
+                                        <div class="th-content">
+                                            City
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="city" data-order="asc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="city"
+                                                    placeholder="Search City">
+                                            </div>
                                         </div>
-                                        <div class="filter-popup">
-                                            <input type="text" class="table-filter" data-col="city"
-                                                placeholder="Search City">
+                                    </th>
+
+                                    <!-- Qualification Score -->
+                                    <th style="min-width: 100px;">
+                                        <div class="th-content">
+                                            Qualification Score
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="qual-score"
+                                                    data-order="desc"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                </th>
-                                <!-- Exp (Sort + Filter) -->
-                                <th>
-                                    <div class="th-content">
-                                        Total Exp (Yrs)
-                                        <div class="th-icons">
-                                            <i class="fas fa-sort sort-icon" data-col="exp" data-order="asc"></i>
-                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                    </th>
+
+                                    <!-- Relevant Exp Score -->
+                                    <th style="min-width: 100px;">
+                                        <div class="th-content">
+                                            Relevant Exp Score
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="rel-exp-score"
+                                                    data-order="desc"></i>
+                                            </div>
                                         </div>
-                                        <div class="filter-popup">
-                                            <input type="text" class="table-filter" data-col="exp"
-                                                placeholder="Ex: 5.0">
+                                    </th>
+
+                                    <!-- Total Exp Score -->
+                                    <th style="min-width: 100px;">
+                                        <div class="th-content">
+                                            Total Exp Score
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="total-exp-score"
+                                                    data-order="desc"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                </th>
-                                <!-- Skill Score (Sort + Filter) -->
-                                <th>
-                                    <div class="th-content">
-                                        Skill Score
-                                        <div class="th-icons">
-                                            <i class="fas fa-sort sort-icon" data-col="skill-score"
-                                                data-order="desc"></i>
-                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                    </th>
+
+                                    <!-- Certification Score -->
+                                    <th style="min-width: 110px;">
+                                        <div class="th-content">
+                                            Certification Score
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="cert-score"
+                                                    data-order="desc"></i>
+                                            </div>
                                         </div>
-                                        <div class="filter-popup">
-                                            <input type="text" class="table-filter" data-col="skill-score"
-                                                placeholder="Ex: 90">
+                                    </th>
+
+                                    <!-- Responsibility Score -->
+                                    <th style="min-width: 120px;">
+                                        <div class="th-content">
+                                            Responsibility Score
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="resp-score"
+                                                    data-order="desc"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                </th>
-                                <!-- Overall Score (Sort + Filter) -->
-                                <th>
-                                    <div class="th-content">
-                                        Overall Score
-                                        <div class="th-icons">
-                                            <i class="fas fa-sort sort-icon" data-col="overall-score"
-                                                data-order="desc"></i>
-                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                    </th>
+
+                                    <!-- Skillset Score -->
+                                    <th style="min-width: 100px;">
+                                        <div class="th-content">
+                                            Skillset Score
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="skill-score"
+                                                    data-order="desc"></i>
+                                            </div>
                                         </div>
-                                        <div class="filter-popup">
-                                            <input type="text" class="table-filter" data-col="overall-score"
-                                                placeholder="Ex: 8.5">
+                                    </th>
+
+                                    <!-- Overall Score (Sort + Filter) -->
+                                    <th style="min-width: 100px;">
+                                        <div class="th-content">
+                                            Overall Score
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="overall-score"
+                                                    data-order="desc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="overall-score"
+                                                    placeholder="Ex: 8.5">
+                                            </div>
                                         </div>
-                                    </div>
-                                </th>
-                                <!-- AI Status (Sort + Filter) -->
-                                <th>
-                                    <div class="th-content">
-                                        AI Status
-                                        <div class="th-icons">
-                                            <i class="fas fa-sort sort-icon" data-col="ai-status" data-order="asc"></i>
-                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                    </th>
+                                    <!-- AI Status (Sort + Filter) -->
+                                    <th class="sticky-col sticky-col-right" style="right: 140px; z-index: 3;">
+                                        <div class="th-content">
+                                            AI Status
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="ai-status"
+                                                    data-order="asc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <select class="table-filter" data-col="ai-status">
+                                                    <option value="all">All</option>
+                                                    <option value="Strong Fit">Strong Fit</option>
+                                                    <option value="Potential Fit">Potential Fit</option>
+                                                    <option value="Low Match">Low Match</option>
+                                                    <option value="Border line">Border line</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="filter-popup">
-                                            <select class="table-filter" data-col="ai-status">
-                                                <option value="all">All</option>
-                                                <option value="Strong Fit">Strong Fit</option>
-                                                <option value="Potential Fit">Potential Fit</option>
-                                                <option value="Low Match">Low Match</option>
-                                                <option value="Border line">Border line</option>
-                                            </select>
+                                    </th>
+                                    <!-- HR Status (Sort + Filter) -->
+                                    <th class="sticky-col sticky-col-right" style="right: 0; z-index: 3;">
+                                        <div class="th-content">
+                                            HR Status
+                                            <div class="th-icons">
+                                                <i class="fas fa-sort sort-icon" data-col="hr-status"
+                                                    data-order="asc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <select class="table-filter" data-col="hr-status">
+                                                    <option value="all">All</option>
+                                                    <option value="Shortlisted">Shortlisted</option>
+                                                    <option value="Hold">Hold</option>
+                                                    <option value="Rejected">Rejected</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                </th>
-                                <!-- HR Status (Sort + Filter) -->
-                                <th>
-                                    <div class="th-content">
-                                        HR Status
-                                        <div class="th-icons">
-                                            <i class="fas fa-sort sort-icon" data-col="hr-status" data-order="asc"></i>
-                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be populated dynamically by JS -->
+                            </tbody>
+                            <tfoot id="candidate-empty-state" class="empty-state">
+                                <tr>
+                                    <td colspan="100%">
+                                        <div style="padding: 40px; text-align: center;">
+                                            <div class="empty-state-icon"><i class="fas fa-search"></i></div>
+                                            <div class="empty-state-text">No Candidates Found</div>
+                                            <div class="empty-state-subtext">Try adjusting your filters or search terms.
+                                            </div>
                                         </div>
-                                        <div class="filter-popup">
-                                            <select class="table-filter" data-col="hr-status">
-                                                <option value="all">All</option>
-                                                <option value="Shortlisted">Shortlisted</option>
-                                                <option value="Hold">Hold</option>
-                                                <option value="Rejected">Rejected</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
-                                <td><a href="#" class="view-link view-resume-link">Aarav Sharma</a></td>
-                                <td>Bengaluru</td>
-                                <td>6.5</td>
-                                <td>92/100</td>
-                                <td>9.1</td>
-                                <td><span class="badge fit">Strong Fit</span></td>
-                                <td><span class="badge fit">Shortlisted</span></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
-                                <td><a href="#" class="view-link view-resume-link">Diya Gupta</a></td>
-                                <td>Mumbai</td>
-                                <td>2.0</td>
-                                <td>81/100</td>
-                                <td>4.2</td>
-                                <td><span class="badge potential">Potential Fit</span></td>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <span class="badge unfit">Rejected</span>
-                                        <i class="fas fa-sticky-note note-icon"
-                                            onmouseenter="showTooltip(event, 'HR Note: Reviewed manually. Value add due to specific domain experience.')"
-                                            onmouseleave="hideTooltip()"></i>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
-                                <td><a href="#" class="view-link view-resume-link">Vihaan Singh</a></td>
-                                <td>Delhi</td>
-                                <td>4.0</td>
-                                <td>78/100</td>
-                                <td>7.5</td>
-                                <td><span class="badge info">Border line</span></td>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <span class="badge info">Hold</span>
-                                        <i class="fas fa-sticky-note note-icon"
-                                            onmouseenter="showTooltip(event, 'HR Note: Candidate requested additional time to confirm interest. Profile temporarily placed on hold.')"
-                                            onmouseleave="hideTooltip()"></i>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
-                                <td><a href="#" class="view-link view-resume-link">Priya Patel</a></td>
-                                <td>Hyderabad</td>
-                                <td>8.0</td>
-                                <td>95/100</td>
-                                <td>9.4</td>
-                                <td><span class="badge fit">Strong Fit</span></td>
-                                <td><span class="badge fit">Shortlisted</span></td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td><a href="#" class="view-link view-jd-link">v1.2</a></td>
-                                <td><a href="#" class="view-link view-resume-link">Arjun Kumar</a></td>
-                                <td>Chennai</td>
-                                <td>1.5</td>
-                                <td>30/100</td>
-                                <td>3.8</td>
-                                <td><span class="badge unfit">Low Match</span></td>
-                                <td><span class="badge unfit">Rejected</span></td>
-                            </tr>
-                        </tbody>
-                        <tfoot id="candidate-empty-state" class="empty-state">
-                            <tr>
-                                <td colspan="100%">
-                                    <div style="padding: 40px; text-align: center;">
-                                        <div class="empty-state-icon"><i class="fas fa-search"></i></div>
-                                        <div class="empty-state-text">No Candidates Found</div>
-                                        <div class="empty-state-subtext">Try adjusting your filters or search terms.
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                     <!-- 8) PAGINATION -->
                     <div class="pagination">
                         <div>Rows per page: <select style="padding: 4px; border-radius: 4px; border: 1px solid #ddd;">
@@ -2811,7 +3041,7 @@
                     </div>
 
                     <div style="display: flex; gap: 15px; justify-content: center;">
-                        <button class="btn-cancel" id="btn-cancel-create-jd">Cancel</button>
+                        <button class="btn-cancel-global" id="btn-cancel-create-jd">Cancel</button>
                         <button class="btn-confirm" id="btn-submit-jd">Submit to HR</button>
                     </div>
                 </div>
@@ -2855,9 +3085,10 @@
 
                     <!-- 2. Password Form (Hidden by default) -->
                     <div id="settings-password-form" style="display: none;">
-                        <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-muted);"
+                        <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; cursor: pointer; color: #000;"
                             onclick="document.getElementById('settings-main-menu').style.display='block'; document.getElementById('settings-password-form').style.display='none';">
-                            <i class="fas fa-arrow-left"></i> <span>Back to Settings</span>
+                            <i class="fas fa-arrow-left" style="font-size: 1.4rem;"></i> <span
+                                style="font-weight: 600;">Back to Settings</span>
                         </div>
 
                         <div
@@ -2889,8 +3120,8 @@
                         <div style="display: flex; gap: 12px;">
                             <button class="btn btn-primary" id="btn-update-password" style="padding: 8px 16px;">Update
                                 Password</button>
-                            <button class="btn-cancel" id="btn-cancel-settings"
-                                style="border: 1px solid #cbd5e1; background: white; color: #64748b;">Cancel</button>
+                            <button class="btn-cancel-global" id="btn-cancel-settings"
+                                style="border: 1px solid #FC4860;">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -2905,10 +3136,11 @@
     <!-- Custom Upload Modal -->
     <div class="modal-overlay" id="upload-modal">
         <div class="modal-container">
-            <div class="modal-header">
-                <div class="modal-title" id="upload-modal-title">Upload Resumes</div>
+            <div class="global-modal-header">
+                <div class="global-modal-title" id="upload-modal-title">Upload Resumes</div>
+                <button class="global-close-btn" id="btn-close-upload-modal"><i class="fas fa-times"></i></button>
             </div>
-            <div class="modal-body">
+            <div class="global-modal-body">
 
                 <!-- VIEW 1: DROP ZONE (Default) -->
                 <div id="upload-view-dropzone">
@@ -2921,7 +3153,6 @@
                             <div class="modal-jd-meta"><span><i class="fas fa-map-marker-alt"></i>San
                                     Francisco</span><span class="version-tag">v2.1 (Latest)</span></div>
                         </div>
-                        <div class="locked-badge"><i class="fas fa-lock"></i>Locked for resume uploads</div>
                     </div>
                     <!-- Upload Area -->
                     <div class="upload-area" id="drop-zone">
@@ -2991,26 +3222,31 @@
 
             </div>
             <!-- Footer for Dropzone -->
-            <div class="modal-footer" id="upload-footer-default">
-                <button class="btn-cancel" id="btn-cancel-modal">Cancel</button>
-                <button class="btn-confirm" id="btn-confirm-modal">Upload Resumes</button>
+            <div class="global-modal-footer" id="upload-footer-default">
+                <button class="btn-cancel-global" id="btn-cancel-modal">Close</button>
+                <button class="btn-primary-global" id="btn-confirm-modal">Upload Resumes</button>
             </div>
 
             <!-- Footer for Progress (Hidden initially) -->
-            <div class="modal-footer" id="upload-footer-progress" style="display: none; justify-content: flex-end;">
-                <button class="btn-confirm" id="btn-upload-done" disabled>Done</button>
+            <div class="global-modal-footer" id="upload-footer-progress"
+                style="display: none; justify-content: flex-end;">
+                <button class="btn-primary-global" id="btn-upload-done" disabled>Done</button>
             </div>
         </div>
     </div>
     <!-- Resume Selection Modal -->
     <div class="modal-overlay" id="resume-select-modal">
         <div class="modal-container" style="max-height: 85vh;">
-            <div class="modal-header" style="display: flex; align-items: center; justify-content: flex-start;">
-                <i class="fas fa-arrow-left" id="btn-back-modal"
-                    style="display: none; cursor: pointer; margin-right: 15px; font-size: 1.1rem; color: #555;"></i>
-                <div class="modal-title" style="flex: 1; text-align: left;">Select Resumes for Analysis</div>
+            <div class="global-modal-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-arrow-left" id="btn-back-modal"
+                        style="display: none; cursor: pointer; font-size: 1.6rem; color: #000; font-weight: bold;"></i>
+                    <div class="global-modal-title">Select Resumes for Analysis</div>
+                </div>
+                <!-- Optional Close Button if needed, or rely on Footer Close -->
+                <button class="global-close-btn" id="btn-close-select-modal"><i class="fas fa-times"></i></button>
             </div>
-            <div class="modal-body">
+            <div class="global-modal-body">
                 <!-- VIEW 1: SELECTION -->
                 <div id="view-selection">
                     <!-- Selected JD Section -->
@@ -3042,74 +3278,68 @@
                         </div>
                     </div>
                     <!-- Resume List -->
-                    <div class="resume-list">
-                        <!-- Resume 1 -->
-                        <div class="resume-card" onclick="toggleSelection(this)">
-                            <div class="checkbox-wrapper"><input type="checkbox" class="custom-checkbox"></div>
-                            <div class="resume-info">
-                                <div class="candidate-name">Ravi Teja</div>
-                                <div class="candidate-email">ravi.teja@example.com</div>
-                                <div class="resume-summary">Experienced frontend
-                                    developer with 5 years in React and TypeScript.
-                                    Strong background in UI/UX implementation.</div>
-                            </div>
-                        </div>
-                        <!-- Resume 2 -->
-                        <div class="resume-card" onclick="toggleSelection(this)">
-                            <div class="checkbox-wrapper"><input type="checkbox" class="custom-checkbox"></div>
-                            <div class="resume-info">
-                                <div class="candidate-name">Sita Lakshmi</div>
-                                <div class="candidate-email">
-                                    sita.lakshmi@example.com</div>
-                                <div class="resume-summary">Full stack engineer
-                                    specializing in Node.js and React. Previously
-                                    led a team of 4 developers.</div>
-                            </div>
-                        </div>
-                        <!-- Resume 3 -->
-                        <div class="resume-card" onclick="toggleSelection(this)">
-                            <div class="checkbox-wrapper"><input type="checkbox" class="custom-checkbox"></div>
-                            <div class="resume-info">
-                                <div class="candidate-name">Venkatesh Duggirala
-                                </div>
-                                <div class="candidate-email">
-                                    venkatesh.d@example.com</div>
-                                <div class="resume-summary">Junior developer
-                                    passionate about modern web technologies.
-                                    Recent bootcamp graduate with a strong
-                                    portfolio.</div>
-                            </div>
-                        </div>
-                        <!-- Resume 4 -->
-                        <div class="resume-card" onclick="toggleSelection(this)">
-                            <div class="checkbox-wrapper"><input type="checkbox" class="custom-checkbox">
-                            </div>
-                            <div class="resume-info">
-                                <div class="candidate-name">Anjali Reddy
-                                </div>
-                                <div class="candidate-email">
-                                    anjali.reddy@example.com</div>
-                                <div class="resume-summary">Frontend
-                                    specialist with expertise in Vue.js and
-                                    React. Contributor to several open
-                                    source projects.</div>
-                            </div>
-                        </div>
-                        <!-- Resume 5 -->
-                        <div class="resume-card" onclick="toggleSelection(this)">
-                            <div class="checkbox-wrapper"><input type="checkbox" class="custom-checkbox"></div>
-                            <div class="resume-info">
-                                <div class="candidate-name">Sai Kumar
-                                </div>
-                                <div class="candidate-email">
-                                    sai.kumar@example.com</div>
-                                <div class="resume-summary">Senior
-                                    software engineer with 8+years of
-                                    experience. Architected scalable
-                                    frontend solutions for fintech.
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Resume List (Table View) -->
+                    <div class="resume-selection-wrapper"
+                        style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; max-height: 480px; overflow-y: auto;">
+                        <table class="resume-selection-table">
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-cell">
+                                        <!-- Checkbox Header -->
+                                    </th>
+                                    <th>Candidate Name</th>
+                                    <th>Email ID</th>
+                                    <th>Phone Number</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resume-selection-tbody">
+                                <!-- Row 1 -->
+                                <tr class="resume-row" onclick="toggleSelection(this)">
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="custom-checkbox">
+                                    </td>
+                                    <td class="candidate-name">Ravi Teja</td>
+                                    <td class="contact-info">ravi.teja@example.com</td>
+                                    <td class="contact-info">+91 98480 22338</td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr class="resume-row" onclick="toggleSelection(this)">
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="custom-checkbox">
+                                    </td>
+                                    <td class="candidate-name">Sita Lakshmi</td>
+                                    <td class="contact-info">sita.lakshmi@example.com</td>
+                                    <td class="contact-info">+91 91234 56789</td>
+                                </tr>
+                                <!-- Row 3 -->
+                                <tr class="resume-row" onclick="toggleSelection(this)">
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="custom-checkbox">
+                                    </td>
+                                    <td class="candidate-name">Venkatesh Duggirala</td>
+                                    <td class="contact-info">venkatesh.d@example.com</td>
+                                    <td class="contact-info">+91 98765 43210</td>
+                                </tr>
+                                <!-- Row 4 -->
+                                <tr class="resume-row" onclick="toggleSelection(this)">
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="custom-checkbox">
+                                    </td>
+                                    <td class="candidate-name">Anjali Reddy</td>
+                                    <td class="contact-info">anjali.reddy@example.com</td>
+                                    <td class="contact-info">+91 95432 10987</td>
+                                </tr>
+                                <!-- Row 5 -->
+                                <tr class="resume-row" onclick="toggleSelection(this)">
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox" class="custom-checkbox">
+                                    </td>
+                                    <td class="candidate-name">Sai Kumar</td>
+                                    <td class="contact-info">sai.kumar@example.com</td>
+                                    <td class="contact-info">+91 97654 32109</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <!-- VIEW 2: ANALYSIS PROGRESS (Initially Hidden) -->
@@ -3262,51 +3492,61 @@
 
             <!-- VIEW: TABULAR RESULTS (New) -->
             <!-- VIEW: TABULAR RESULTS (New) -->
-            <div id="view-analysis-results" style="display: none; padding: 20px; padding-top: 5px;">
+            <div id="view-analysis-results" style="display: none; padding: 15px; padding-top: 0;">
                 <!-- JD Context Header -->
-                <div id="analysis-results-jd-context"
-                    style="font-size: 1rem; color: #666; margin-bottom: 20px; font-weight: 500;">
+                <div id="analysis-results-jd-context" class="jd-info-card"
+                    style="margin-top: 0; margin-bottom: 6px; padding: 10px 20px;">
                     <!-- Populated via JS -->
                 </div>
 
                 <div class="table-container" style="box-shadow: none; border: 1px solid #eee; padding: 0;">
-                    <table style="margin-top: 0;">
-                        <thead>
-                            <tr style="background: #f8f9fc;">
-                                <th>SN</th>
-                                <th>Candidate Name</th>
-                                <!-- HR Status Removed -->
-                                <th>Skill Match</th>
-                                <th>AI Status</th>
-                                <th>Overall Score</th>
-                            </tr>
-                        </thead>
-                        <tbody id="analysis-results-body">
-                            <!-- Populated via JS -->
-                        </tbody>
-                    </table>
+                    <div class="table-scroll-wrapper" style="margin-top: 0;">
+                        <table id="analysis-results-table"
+                            style="margin-top: 0; min-width: 1000px; border-collapse: separate; border-spacing: 0;">
+                            <thead>
+                                <tr style="background: #f8f9fc;">
+                                    <th class="sticky-col sticky-col-left" style="left: 0; z-index: 13;">SN</th>
+                                    <th class="sticky-col sticky-col-left" style="left: 60px; z-index: 13;">Candidate
+                                        Name</th>
+                                    <th style="min-width: 100px;">City</th>
+                                    <th style="min-width: 70px; text-align: center;">Qual.</th>
+                                    <th style="min-width: 80px; text-align: center;">Rel. Exp</th>
+                                    <th style="min-width: 80px; text-align: center;">Total Exp</th>
+                                    <th style="min-width: 70px; text-align: center;">Cert.</th>
+                                    <th style="min-width: 70px; text-align: center;">Resp.</th>
+                                    <th style="min-width: 70px; text-align: center;">Skill</th>
+                                    <th style="min-width: 80px; text-align: center;">Overall</th>
+                                    <th class="sticky-col sticky-col-right"
+                                        style="right: 0; z-index: 13; text-align: center;">AI Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analysis-results-body">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div style="margin-top: 20px; display: flex; justify-content: space-between;">
-                    <button class="btn-cancel" id="btn-close-results-view"
-                        style="border: 1px solid #ddd; background: white; color: #333;">Close</button>
+                <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 12px;">
+                    <button class="btn-cancel-global" id="btn-close-results-view">Close</button>
                     <button class="btn-confirm" id="btn-export-results"
                         style="background: var(--success); color: white;">
                         <i class="fas fa-file-export" style="margin-right: 8px;"></i>Download result
                     </button>
                 </div>
             </div>
-            <div class="modal-footer" id="modal-footer-selection"><button class="btn-cancel"
-                    id="btn-cancel-select">Cancel</button><button class="btn-confirm" id="btn-start-analysis-modal"
-                    disabled>Start Analysis (0)</button></div>
+            <div class="global-modal-footer" id="modal-footer-selection">
+                <button class="btn-cancel-global" id="btn-cancel-select">Close</button>
+                <button class="btn-primary-global" id="btn-start-analysis-modal" disabled>Start Analysis (0)</button>
+            </div>
             <!-- ANALYSIS FOOTER (New) -->
-            <div class="modal-footer" id="modal-footer-progress" style="display: none; justify-content: space-between;">
+            <div class="global-modal-footer" id="modal-footer-progress"
+                style="display: none; justify-content: space-between;">
                 <span style="font-size:0.85rem; color:#666; align-self:center;">Analysis in progress...</span>
                 <div style="display: flex; gap: 10px;">
                     <button class="reanalyze-fab" style="display: none; position: static; box-shadow: none;"><i
                             class="fas fa-play"></i>Continue (0)</button>
-                    <button class="btn-confirm" id="btn-view-result"
-                        style="background: var(--primary); color: white;">View Result</button>
+                    <button class="btn-primary-global" id="btn-view-result">View Result</button>
                 </div>
             </div>
         </div>
@@ -3315,15 +3555,11 @@
     <!-- PDF VIEWER MODAL -->
     <div class="modal-overlay" id="pdf-viewer-modal">
         <div class="modal-container">
-            <div class="modal-header">
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                    <div class="modal-title" id="pdf-viewer-title">Document Viewer</div>
-                    <button class="btn-cancel" id="btn-close-pdf-modal" style="padding: 6px 16px;">
-                        <i class="fas fa-times"></i> Close
-                    </button>
-                </div>
+            <div class="global-modal-header">
+                <div class="global-modal-title" id="pdf-viewer-title">Document Viewer</div>
+                <button class="global-close-btn" id="btn-close-pdf-modal"><i class="fas fa-times"></i></button>
             </div>
-            <div class="modal-body">
+            <div class="global-modal-body">
                 <iframe id="pdf-frame" class="pdf-frame" src=""></iframe>
             </div>
         </div>
@@ -3336,11 +3572,11 @@
     <!-- DUPLICATE RESUME DETECTION MODAL -->
     <div class="dup-modal-overlay" id="dup-modal">
         <div class="dup-modal-container">
-            <div class="modal-header">
-                <div class="modal-title">Duplicate Resume Detected!</div>
-                <button class="close-btn" id="dup-close-btn"><i class="fas fa-times"></i></button>
+            <div class="global-modal-header">
+                <div class="global-modal-title">Duplicate Resume Detected!</div>
+                <button class="global-close-btn" id="dup-close-btn"><i class="fas fa-times"></i></button>
             </div>
-            <div class="modal-body">
+            <div class="global-modal-body">
                 <div class="dup-info-text">
                     We found duplicate resumes with matching Email or Phone Number.
                 </div>
@@ -3402,9 +3638,8 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="dup-cancel-btn">Cancel</button>
-                <button class="btn btn-primary" id="dup-confirm-btn">Continue</button>
+            <div class="global-modal-footer">
+                <button class="btn-cancel-global" id="dup-cancel-btn">Close</button>
             </div>
         </div>
     </div>
@@ -3423,6 +3658,10 @@
                 const text = selectedOption.value;
                 if (pageContext) {
                     pageContext.textContent = `Recruiter Dashboard - ${text} - ${version}`;
+                }
+                const jdVerTag = document.getElementById('current-jd-version');
+                if (jdVerTag) {
+                    jdVerTag.textContent = version;
                 }
             };
 
@@ -3476,12 +3715,16 @@
                 });
             }
 
-            // 3. Close Modal (Cancel)
+            // 3. Close Modal (Cancel & X Button)
             if (btnCancelModal && modal) {
                 btnCancelModal.addEventListener('click', () => {
                     modal.classList.remove('active');
-                    // Reset input if needed? 
-                    // No, keeping it simple.
+                });
+            }
+            const btnCloseUpload = document.getElementById('btn-close-upload-modal');
+            if (btnCloseUpload && modal) {
+                btnCloseUpload.addEventListener('click', () => {
+                    modal.classList.remove('active');
                 });
             }
 
@@ -3721,7 +3964,6 @@
             // --- DUPLICATE MODAL LOGIC ---
             const dupCloseBtn = document.getElementById('dup-close-btn');
             const dupCancelBtn = document.getElementById('dup-cancel-btn');
-            const dupConfirmBtn = document.getElementById('dup-confirm-btn');
             const dupModal = document.getElementById('dup-modal');
 
             if (dupCloseBtn) {
@@ -3731,13 +3973,6 @@
             }
             if (dupCancelBtn) {
                 dupCancelBtn.addEventListener('click', () => {
-                    if (dupModal) dupModal.classList.remove('active');
-                });
-            }
-            if (dupConfirmBtn) {
-                dupConfirmBtn.addEventListener('click', () => {
-                    // Handle confirm action here
-                    alert("Selection Confirmed");
                     if (dupModal) dupModal.classList.remove('active');
                 });
             }
@@ -3763,18 +3998,24 @@
                 });
             }
 
-            // Close Modal
+            // Close Modal (Cancel & X Button)
             if (btnCancelSelect && resumeSelectModal) {
                 btnCancelSelect.addEventListener('click', () => {
+                    resumeSelectModal.classList.remove('active');
+                });
+            }
+            const btnCloseSelect = document.getElementById('btn-close-select-modal');
+            if (btnCloseSelect && resumeSelectModal) {
+                btnCloseSelect.addEventListener('click', () => {
                     resumeSelectModal.classList.remove('active');
                 });
             }
 
             // Toggle Selection Function (Global for onclick attribute)
             // Toggle Selection Function (Global for onclick attribute)
-            window.toggleSelection = function (card) {
+            window.toggleSelection = function (row) {
                 // Toggle checkbox
-                const checkbox = card.querySelector('.custom-checkbox');
+                const checkbox = row.querySelector('.custom-checkbox');
 
                 if (window.event && window.event.target !== checkbox) {
                     checkbox.checked = !checkbox.checked;
@@ -3782,16 +4023,16 @@
 
                 // Toggle visual style
                 if (checkbox.checked) {
-                    card.classList.add('selected');
+                    row.classList.add('selected');
                 } else {
-                    card.classList.remove('selected');
+                    row.classList.remove('selected');
                 }
 
                 updateSelectButtonState();
             };
 
             function updateSelectButtonState() {
-                const allCheckboxes = Array.from(resumeSelectModal.querySelectorAll('.resume-card .custom-checkbox'));
+                const allCheckboxes = Array.from(resumeSelectModal.querySelectorAll('.resume-row .custom-checkbox'));
                 const selectedCheckboxes = allCheckboxes.filter(cb => cb.checked);
                 const selectedCount = selectedCheckboxes.length;
 
@@ -3811,13 +4052,13 @@
             if (selectAllResumes) {
                 selectAllResumes.addEventListener('change', (e) => {
                     const isChecked = e.target.checked;
-                    const checkboxes = resumeSelectModal.querySelectorAll('.resume-card .custom-checkbox');
+                    const checkboxes = resumeSelectModal.querySelectorAll('.resume-row .custom-checkbox');
 
                     checkboxes.forEach(chk => {
                         chk.checked = isChecked;
-                        const card = chk.closest('.resume-card');
-                        if (isChecked) card.classList.add('selected');
-                        else card.classList.remove('selected');
+                        const row = chk.closest('.resume-row');
+                        if (isChecked) row.classList.add('selected');
+                        else row.classList.remove('selected');
                     });
 
                     updateSelectButtonState();
@@ -3829,7 +4070,7 @@
             const viewProgress = document.getElementById('view-progress');
             const footerSelection = document.getElementById('modal-footer-selection');
             const footerProgress = document.getElementById('modal-footer-progress');
-            const modalTitle = document.querySelector('#resume-select-modal .modal-title');
+            const modalTitle = document.querySelector('#resume-select-modal .global-modal-title');
 
             const btnCloseAnalysis = document.getElementById('btn-close-analysis');
 
@@ -3913,8 +4154,13 @@
                     const contextDiv = document.getElementById('analysis-results-jd-context');
                     if (contextDiv) {
                         // Using main dashboard selection
+                        const selectedOption = jdSelect.options[jdSelect.selectedIndex];
+                        const currentVersion = selectedOption.getAttribute('data-version') || 'v1.0';
                         const currentJd = jdSelect ? jdSelect.value : 'AI/ML Engineer';
-                        contextDiv.innerHTML = `<a href="#" class="view-link view-jd-link" style="color: inherit; text-decoration: none;">${currentJd} - v2.1</a>`;
+                        contextDiv.innerHTML = `
+                            <span class="jd-label">JD VERSION USED:</span>
+                            <span class="jd-value">${currentVersion} – ${currentJd}</span>
+                        `;
                     }
 
                     // Populate Table
@@ -3925,17 +4171,17 @@
             function populateAnalysisResults() {
                 analysisResultsBody.innerHTML = '';
                 const mockResults = [
-                    { sn: 1, name: 'Ravi Teja', skill: '8.5/10', ai: 'Strong Fit', statusClass: 'fit', score: 8.5, pdf: 'Ravi_Teja_Resume.pdf' },
-                    { sn: 2, name: 'Sita Lakshmi', skill: '9.0/10', ai: 'Strong Fit', statusClass: 'fit', score: 9.2, pdf: 'Sita_Lakshmi_Resume.pdf' },
-                    { sn: 3, name: 'Venkatesh D.', skill: '5.0/10', ai: 'Low Match', statusClass: 'unfit', score: 5.4, pdf: 'Venkatesh_Duggirala_Resume.pdf' },
-                    { sn: 4, name: 'Anjali Reddy', skill: '3.0/10', ai: 'Low Match', statusClass: 'unfit', score: 3.2, pdf: 'Anjali_Reddy_Resume.pdf' },
-                    { sn: 5, name: 'Sai Kumar', skill: '7.8/10', ai: 'Potential Fit', statusClass: 'potential', score: 8.0, pdf: 'Sai_Kumar_Resume.pdf' }
+                    { sn: 1, name: 'Ravi Teja', city: 'Hyderabad', qual: 8.5, relExp: 9.0, totalExp: 8.8, cert: 8.5, resp: 8.2, skill: 8.5, score: 8.5, ai: 'Strong Fit', statusClass: 'fit', pdf: 'Ravi_Teja_Resume.pdf' },
+                    { sn: 2, name: 'Sita Lakshmi', city: 'Bangalore', qual: 9.2, relExp: 9.5, totalExp: 9.3, cert: 9.0, resp: 9.1, skill: 9.0, score: 9.2, ai: 'Strong Fit', statusClass: 'fit', pdf: 'Sita_Lakshmi_Resume.pdf' },
+                    { sn: 3, name: 'Venkatesh D.', city: 'Chennai', qual: 5.5, relExp: 5.0, totalExp: 5.2, cert: 5.5, resp: 5.8, skill: 5.0, score: 5.4, ai: 'Low Match', statusClass: 'unfit', pdf: 'Venkatesh_Duggirala_Resume.pdf' },
+                    { sn: 4, name: 'Anjali Reddy', city: 'Hyderabad', qual: 3.5, relExp: 3.0, totalExp: 3.2, cert: 3.5, resp: 3.8, skill: 3.0, score: 3.2, ai: 'Low Match', statusClass: 'unfit', pdf: 'Anjali_Reddy_Resume.pdf' },
+                    { sn: 5, name: 'Sai Kumar', city: 'Pune', qual: 7.5, relExp: 8.0, totalExp: 7.8, cert: 8.5, resp: 7.2, skill: 7.8, score: 8.0, ai: 'Potential Fit', statusClass: 'potential', pdf: 'Sai_Kumar_Resume.pdf' }
                 ];
 
                 if (mockResults.length === 0) {
                     analysisResultsBody.innerHTML = `
                          <tr>
-                             <td colspan="5">
+                             <td colspan="11">
                                  <div class="empty-state active" style="border:none;">
                                      <div class="empty-state-icon"><i class="fas fa-clipboard-list"></i></div>
                                      <div class="empty-state-text">No Results to Display</div>
@@ -3949,11 +4195,17 @@
                 mockResults.forEach(res => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                            <td>${res.sn}</td>
-                            <td><a href="#" class="view-link view-resume-link" data-pdf="${res.pdf}">${res.name}</a></td>
-                            <td>${res.skill}</td>
-                            <td><span class="badge ${res.statusClass}">${res.ai}</span></td>
-                            <td>${res.score}</td>
+                            <td class="sticky-col sticky-col-left" style="left: 0; text-align: center;">${res.sn}</td>
+                            <td class="sticky-col sticky-col-left" style="left: 60px;"><a href="#" class="view-link view-resume-link" data-pdf="${res.pdf}">${res.name}</a></td>
+                            <td>${res.city}</td>
+                            <td style="text-align: center;">${res.qual}</td>
+                            <td style="text-align: center;">${res.relExp}</td>
+                            <td style="text-align: center;">${res.totalExp}</td>
+                            <td style="text-align: center;">${res.cert}</td>
+                            <td style="text-align: center;">${res.resp}</td>
+                            <td style="text-align: center;">${res.skill}</td>
+                            <td style="text-align: center;">${res.score}</td>
+                            <td class="sticky-col sticky-col-right" style="right: 0; text-align: center;"><span class="badge ${res.statusClass}">${res.ai}</span></td>
                         `;
                     analysisResultsBody.appendChild(tr);
                 });
@@ -3998,18 +4250,18 @@
             if (btnExportResults) {
                 btnExportResults.addEventListener('click', async () => {
                     const mockResults = [
-                        { sn: 1, name: 'Ravi Teja', skill: '8.5/10', ai: 'Strong Fit', statusClass: 'fit', score: 8.5 },
-                        { sn: 2, name: 'Sita Lakshmi', skill: '9.0/10', ai: 'Strong Fit', statusClass: 'fit', score: 9.2 },
-                        { sn: 3, name: 'Venkatesh D.', skill: '5.0/10', ai: 'Low Match', statusClass: 'unfit', score: 5.4 },
-                        { sn: 4, name: 'Anjali Reddy', skill: '3.0/10', ai: 'Low Match', statusClass: 'unfit', score: 3.2 },
-                        { sn: 5, name: 'Sai Kumar', skill: '7.8/10', ai: 'Potential Fit', statusClass: 'potential', score: 8.0 }
+                        { sn: 1, name: 'Ravi Teja', city: 'Hyderabad', qual: 8.5, relExp: 9.0, totalExp: 8.8, cert: 8.5, resp: 8.2, skill: 8.5, score: 8.5, ai: 'Strong Fit' },
+                        { sn: 2, name: 'Sita Lakshmi', city: 'Bangalore', qual: 9.2, relExp: 9.5, totalExp: 9.3, cert: 9.0, resp: 9.1, skill: 9.0, score: 9.2, ai: 'Strong Fit' },
+                        { sn: 3, name: 'Venkatesh D.', city: 'Chennai', qual: 5.5, relExp: 5.0, totalExp: 5.2, cert: 5.5, resp: 5.8, skill: 5.0, score: 5.4, ai: 'Low Match' },
+                        { sn: 4, name: 'Anjali Reddy', city: 'Hyderabad', qual: 3.5, relExp: 3.0, totalExp: 3.2, cert: 3.5, resp: 3.8, skill: 3.0, score: 3.2, ai: 'Low Match' },
+                        { sn: 5, name: 'Sai Kumar', city: 'Pune', qual: 7.5, relExp: 8.0, totalExp: 7.8, cert: 8.5, resp: 7.2, skill: 7.8, score: 8.0, ai: 'Potential Fit' }
                     ];
 
                     let csvRows = [];
-                    csvRows.push("SN,Candidate Name,Skill Match,AI Status,Overall Score");
+                    csvRows.push("SN,Candidate Name,City,Qualification Score,Relevant Exp Score,Total Exp Score,Certification Score,Responsibility Score,Skillset Score,Overall Score,AI Status");
 
-                    mockResults.forEach(function (rowArray) {
-                        let row = `${rowArray.sn},${rowArray.name},"${rowArray.skill}",${rowArray.ai},${rowArray.score}`;
+                    mockResults.forEach(function (res) {
+                        let row = `${res.sn},${res.name},${res.city},${res.qual},${res.relExp},${res.totalExp},${res.cert},${res.resp},${res.skill},${res.score},${res.ai}`;
                         csvRows.push(row);
                     });
 
@@ -4097,7 +4349,7 @@
                         viewAnalysisResults.style.display = 'none';
                         viewProgress.style.display = 'block';
                         footerProgress.style.display = 'flex';
-                        if (modalTitle) modalTitle.textContent = "Resume Analysis Progress";
+                        if (modalTitle) modalTitle.textContent = "Resume Analysis Status";
                     } else if (viewProgress.style.display === 'block') {
                         // Go back to Selection View
                         viewProgress.style.display = 'none';
@@ -4296,269 +4548,7 @@
             // Initial Filter Run to setup overlays
             filterAnalysisCards('all');
 
-            // --- TABLE SORT/FILTER LOGIC ---
-            const tableBody = document.querySelector('.table-container tbody'); // First table
-
-            if (tableBody) {
-                const rows = Array.from(tableBody.querySelectorAll('tr'));
-
-                // Helper to get raw data from row
-                // Helper to get raw data from row
-                const getRowData = (row) => {
-                    const cells = row.querySelectorAll('td');
-                    // New Order: SN [0], JD Ver [1], Name [2], City [3], Exp [4], Skill [5], Overall [6], AI [7], HR [8]
-                    return {
-                        element: row,
-                        sn: cells[0].textContent.trim(),
-                        jdVersion: cells[1].textContent.trim(),
-                        name: cells[2].textContent.trim(),
-                        city: cells[3].textContent.trim(),
-                        exp: cells[4].textContent.trim(),
-                        skillScore: parseFloat(cells[5].textContent.split('/')[0]),
-                        skillText: cells[5].textContent.trim(), // for filter
-                        overallScore: parseFloat(cells[6].textContent),
-                        overallText: cells[6].textContent.trim(), // for filter
-                        aiStatus: cells[7].textContent.trim().toLowerCase(),
-                        hrStatus: cells[8].textContent.trim().toLowerCase()
-                    };
-                };
-
-                let currentData = rows.map(getRowData);
-
-                // Elements
-                const filters = document.querySelectorAll('.table-filter');
-                const sortIcons = document.querySelectorAll('.sort-icon');
-
-                // Pagination Elements
-                const paginationSelect = document.querySelector('.pagination select');
-                const pageInfo = document.querySelector('.pagination div:nth-child(2)');
-                const prevBtn = document.querySelector('.pagination .page-controls button:first-child');
-                const nextBtn = document.querySelector('.pagination .page-controls button:last-child');
-
-                // State
-                const state = {
-                    filters: {
-                        'sn': '',
-                        'jd-version': 'all',
-                        'name': '',
-                        'city': '',
-                        'exp': '',
-                        'skill': '',
-                        'overall': '',
-                        'ai-status': 'all',
-                        'hr-status': 'all'
-                    },
-                    sort: {
-                        col: null,
-                        order: 'desc'
-                    },
-                    pagination: {
-                        currentPage: 1,
-                        rowsPerPage: 10
-                    }
-                };
-
-                // Core Function: Update Display (Combines Filter & Pagination)
-                const updateDisplay = () => {
-                    // 1. Filter
-                    let matchCount = 0;
-                    currentData.forEach(item => {
-                        let isMatch = true;
-
-                        // Select Filters (exact match or 'all')
-                        if (state.filters['hr-status'] !== 'all' && !item.hrStatus.includes(state.filters['hr-status'])) isMatch = false;
-                        if (state.filters['ai-status'] !== 'all' && !item.aiStatus.includes(state.filters['ai-status'])) isMatch = false;
-                        if (state.filters['jd-version'] !== 'all' && !item.jdVersion.includes(state.filters['jd-version'])) isMatch = false;
-
-                        // Text Input Filters (Starts With logic, case-insensitive)
-                        if (state.filters['sn'] && !item.sn.toLowerCase().startsWith(state.filters['sn'].toLowerCase())) isMatch = false;
-                        if (state.filters['name'] && !item.name.toLowerCase().startsWith(state.filters['name'].toLowerCase())) isMatch = false;
-                        if (state.filters['city'] && !item.city.toLowerCase().startsWith(state.filters['city'].toLowerCase())) isMatch = false;
-                        if (state.filters['exp'] && !item.exp.toLowerCase().startsWith(state.filters['exp'].toLowerCase())) isMatch = false;
-                        if (state.filters['skill'] && !item.skillText.startsWith(state.filters['skill'])) isMatch = false;
-                        if (state.filters['overall'] && !item.overallText.startsWith(state.filters['overall'])) isMatch = false;
-
-                        item.isMatch = isMatch;
-                        if (isMatch) matchCount++;
-                    });
-
-                    // 2. Pagination Calculations
-                    const totalPages = Math.ceil(matchCount / state.pagination.rowsPerPage);
-
-                    if (state.pagination.currentPage > totalPages && totalPages > 0) state.pagination.currentPage = totalPages;
-                    if (state.pagination.currentPage < 1) state.pagination.currentPage = 1;
-                    if (totalPages === 0) state.pagination.currentPage = 1;
-
-                    const startIndex = (state.pagination.currentPage - 1) * state.pagination.rowsPerPage;
-                    const endIndex = startIndex + state.pagination.rowsPerPage;
-
-                    // 3. Render (Show/Hide)
-                    let visibleIndex = 0;
-                    currentData.forEach(item => {
-                        if (item.isMatch) {
-                            if (visibleIndex >= startIndex && visibleIndex < endIndex) {
-                                item.element.style.display = '';
-                            } else {
-                                item.element.style.display = 'none';
-                            }
-                            visibleIndex++;
-                        } else {
-                            item.element.style.display = 'none';
-                        }
-                    });
-
-                    // 4. Update Pagination Controls
-                    if (pageInfo) {
-                        const start = matchCount === 0 ? 0 : startIndex + 1;
-                        const end = Math.min(endIndex, matchCount);
-                        pageInfo.textContent = `${start}–${end} of ${matchCount}`;
-                    }
-
-                    if (prevBtn) {
-                        prevBtn.disabled = state.pagination.currentPage <= 1;
-                        prevBtn.style.opacity = state.pagination.currentPage <= 1 ? '0.5' : '1';
-                    }
-
-                    if (nextBtn) {
-                        nextBtn.disabled = state.pagination.currentPage >= totalPages;
-                        nextBtn.style.opacity = state.pagination.currentPage >= totalPages ? '0.5' : '1';
-                    }
-
-                    // 5. Toggle Empty State
-                    const emptyState = document.getElementById('candidate-empty-state');
-                    if (emptyState) {
-                        if (matchCount === 0) {
-                            emptyState.classList.add('active');
-                            // Hide pagination if empty?
-                            if (pageInfo) pageInfo.parentElement.style.display = 'none';
-                        } else {
-                            emptyState.classList.remove('active');
-                            if (pageInfo) pageInfo.parentElement.style.display = 'flex';
-                        }
-                    }
-                };
-
-                // Sort Function
-                const applySort = (col, order) => {
-                    // Sort currentData array (reference to rows)
-                    const sorted = [...currentData].sort((a, b) => {
-                        let valA, valB;
-
-                        if (col === 'skill-score') {
-                            valA = a.skillScore;
-                            valB = b.skillScore;
-                            return order === 'asc' ? valA - valB : valB - valA;
-                        } else if (col === 'overall-score') {
-                            valA = a.overallScore;
-                            valB = b.overallScore;
-                            return order === 'asc' ? valA - valB : valB - valA;
-                        } else if (col === 'exp') {
-                            valA = parseFloat(a.exp) || 0;
-                            valB = parseFloat(b.exp) || 0;
-                            return order === 'asc' ? valA - valB : valB - valA;
-                        } else {
-                            // String sort for others (name, city, status)
-                            if (col === 'name') { valA = a.name.toLowerCase(); valB = b.name.toLowerCase(); }
-                            else if (col === 'city') { valA = a.city.toLowerCase(); valB = b.city.toLowerCase(); }
-                            else if (col === 'ai-status') { valA = a.aiStatus; valB = b.aiStatus; }
-                            else if (col === 'hr-status') { valA = a.hrStatus; valB = b.hrStatus; }
-
-                            if (valA < valB) return order === 'asc' ? -1 : 1;
-                            if (valA > valB) return order === 'asc' ? 1 : -1;
-                            return 0;
-                        }
-                    });
-
-                    // Re-append rows in new order
-                    sorted.forEach(item => tableBody.appendChild(item.element));
-                    // Update currentData reference order
-                    currentData = sorted;
-                    updateDisplay();
-                };
-
-                // Event Listeners: Filters
-                filters.forEach(filter => {
-                    // Use 'input' for text fields to be responsive, 'change' for selects
-                    const eventType = filter.tagName === 'SELECT' ? 'change' : 'input';
-
-                    filter.addEventListener(eventType, (e) => {
-                        const col = e.target.dataset.col;
-                        const val = e.target.value.trim();
-                        state.filters[col] = val;
-                        state.pagination.currentPage = 1;
-
-                        // Visual Feedback: Highlight Icon if filter matches
-                        // Structure: .th-content > .filter-icon (optional sibling) + .filter-popup > input
-                        // The icon is the previous element sibling of the popup
-                        const popup = filter.closest('.filter-popup');
-                        if (popup) {
-                            let icon = popup.previousElementSibling;
-                            if (icon) {
-                                if (icon.classList.contains('th-icons')) {
-                                    icon = icon.querySelector('.filter-icon');
-                                }
-                                if (icon && icon.classList.contains('filter-icon')) {
-                                    if (val && val !== 'all') {
-                                        icon.classList.add('active');
-                                    } else {
-                                        icon.classList.remove('active');
-                                    }
-                                }
-                            }
-                        } else {
-                            // Logic for non-popup filters if any (none in this new design but safe to keep)
-                        }
-
-                        updateDisplay();
-                    });
-                });
-
-                // Event Listeners: Sort
-                sortIcons.forEach(icon => {
-                    icon.addEventListener('click', (e) => {
-                        const col = e.target.dataset.col;
-                        let order = e.target.dataset.order;
-
-                        // Toggle Order
-                        order = order === 'asc' ? 'desc' : 'asc';
-                        e.target.dataset.order = order;
-
-                        // Update styling
-                        sortIcons.forEach(i => i.classList.remove('active'));
-                        e.target.classList.add('active');
-
-                        applySort(col, order);
-                    });
-                });
-
-                // Event Listeners: Pagination
-                if (paginationSelect) {
-                    paginationSelect.addEventListener('change', (e) => {
-                        state.pagination.rowsPerPage = parseInt(e.target.value);
-                        state.pagination.currentPage = 1;
-                        updateDisplay();
-                    });
-                }
-
-                if (prevBtn) {
-                    prevBtn.addEventListener('click', () => {
-                        if (state.pagination.currentPage > 1) {
-                            state.pagination.currentPage--;
-                            updateDisplay();
-                        }
-                    });
-                }
-
-                if (nextBtn) {
-                    nextBtn.addEventListener('click', () => {
-                        state.pagination.currentPage++;
-                        updateDisplay();
-                    });
-                }
-
-                // Initial Display
-                updateDisplay();
-            }
+            // --- TABLE SORT/FILTER LOGIC (REMOVED - Superseded by Dynamic Logic below) ---
 
             // --- CREATE NEW JD VIEW LOGIC ---
             const navDashboard = document.getElementById('nav-dashboard');
@@ -4918,11 +4908,11 @@
     <!-- JD UPDATE MODAL -->
     <div class="jd-modal-overlay" id="jd-update-modal">
         <div class="jd-modal-container">
-            <div class="modal-header">
-                <div class="modal-title">Update Job Description</div>
-                <button class="close-btn" id="jd-close-btn"><i class="fas fa-times"></i></button>
+            <div class="global-modal-header">
+                <div class="global-modal-title">Update Job Description</div>
+                <button class="global-close-btn" id="jd-close-btn"><i class="fas fa-times"></i></button>
             </div>
-            <div class="modal-body" style="padding: 0;">
+            <div class="global-modal-body" style="padding: 0;">
                 <div style="padding: 16px 24px 0;">
                     <div style="font-size: 0.95rem; color: var(--text-muted);">Selected JD: <strong id="jd-update-title"
                             style="color: var(--text-dark);">AI/ML Engineer</strong></div>
@@ -4940,9 +4930,9 @@
                     <i class="fas fa-check-circle" style="color: var(--success);"></i>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="jd-cancel-btn">Cancel</button>
-                <button class="btn btn-primary" id="jd-submit-btn" disabled>Submit to HR</button>
+            <div class="global-modal-footer">
+                <button class="btn-cancel-global" id="jd-cancel-btn">Close</button>
+                <button class="btn-primary-global" id="jd-submit-btn" disabled>Submit to HR</button>
             </div>
         </div>
     </div>
@@ -4950,14 +4940,14 @@
     <!-- PROFILE EDIT MODAL HTML -->
     <div class="modal-overlay" id="profile-modal">
         <div class="modal-container" style="width: 480px;">
-            <div class="modal-header">
-                <div class="modal-title">Edit Profile</div>
-                <button class="close-btn" onclick="closeProfileModal()"><i class="fas fa-times"></i></button>
+            <div class="global-modal-header">
+                <div class="global-modal-title">Edit Profile</div>
+                <button class="global-close-btn" onclick="closeProfileModal()"><i class="fas fa-times"></i></button>
             </div>
-            <div class="modal-body">
+            <div class="global-modal-body">
                 <div class="profile-section">
                     <div class="profile-avatar-large">
-                        <div id="p-avatar-text" class="avatar-large-text">S</div>
+                        <div id="p-avatar-text" class="avatar-large-text">N</div>
                         <img id="p-avatar-img"
                             style="display: none; width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
                     </div>
@@ -4969,76 +4959,78 @@
 
                 <div class="form-group">
                     <label class="form-label">Name</label>
-                    <input type="text" class="form-input" id="p-name" value="Sarah Johnson"
+                    <input type="text" class="form-input" id="p-name" value="Nikhil Sai"
                         style="font-weight: 700; color: var(--primary);">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="p-email" value="sarah.johnson@example.com" readonly
+                    <input type="email" class="form-input" id="p-email" value="nikhil.sai@example.com" readonly
                         style="font-weight: 700; color: var(--primary);">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Phone</label>
-                    <input type="text" class="form-input" id="p-phone" value="+1 (555) 123-4567">
+                    <input type="text" class="form-input" id="p-phone" value="+91 95424 52750">
                     <div class="error-text"></div>
                 </div>
-
-
-
-
             </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeProfileModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveProfile()">Update Profile</button>
+            <div class="global-modal-footer">
+                <button class="btn-cancel-global" onclick="closeProfileModal()">Cancel</button>
+                <button class="btn-primary-global" onclick="saveProfile()">Update Profile</button>
             </div>
         </div>
     </div>
 
     <!-- PASSWORD UPDATE MODAL -->
     <div class="modal-overlay" id="password-modal">
-        <div class="modal-container" style="width: 400px; padding: 30px 24px; text-align: center;">
-            <button class="close-btn" onclick="closePasswordModal()"
-                style="position: absolute; top: 16px; right: 16px;"><i class="fas fa-times"></i></button>
-
-            <div style="margin-bottom: 16px;">
-                <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary);"></i>
+        <div class="modal-container" style="width: 440px;">
+            <div class="global-modal-header">
+                <div class="global-modal-title">Update Password</div>
+                <button class="global-close-btn" onclick="closePasswordModal()"><i class="fas fa-times"></i></button>
             </div>
+            <div class="global-modal-body">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="margin-bottom: 12px;">
+                        <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary);"></i>
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Please set a new password for your account.
+                    </p>
+                </div>
 
-            <h2 class="modal-title" style="margin-bottom: 8px; font-size: 1.5rem;">Update Password</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Please set a new password for
-                your account.</p>
+                <div class="form-group" style="text-align: left; position: relative;">
+                    <label class="form-label">Current Password</label>
+                    <div style="position: relative;">
+                        <input type="password" class="form-input" id="pwd-current" placeholder="Enter current password"
+                            maxlength="16">
+                        <i class="fas fa-eye password-toggle"
+                            onclick="togglePasswordVisibility('pwd-current', this)"></i>
+                    </div>
+                </div>
 
-            <div class="form-group" style="text-align: left; position: relative;">
-                <label class="form-label">Current Password</label>
-                <div style="position: relative;">
-                    <input type="password" class="form-input" id="pwd-current" placeholder="Enter current password"
-                        maxlength="16">
-                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('pwd-current', this)"></i>
+                <div class="form-group" style="text-align: left; position: relative;">
+                    <label class="form-label">New Password</label>
+                    <div style="position: relative;">
+                        <input type="password" class="form-input" id="pwd-new" placeholder="Enter new password"
+                            maxlength="16">
+                        <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('pwd-new', this)"></i>
+                    </div>
+                </div>
+
+                <div class="form-group" style="text-align: left; position: relative;">
+                    <label class="form-label">Confirm New Password</label>
+                    <div style="position: relative;">
+                        <input type="password" class="form-input" id="pwd-confirm" placeholder="Re-enter new password"
+                            maxlength="16">
+                        <i class="fas fa-eye password-toggle"
+                            onclick="togglePasswordVisibility('pwd-confirm', this)"></i>
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group" style="text-align: left; position: relative;">
-                <label class="form-label">New Password</label>
-                <div style="position: relative;">
-                    <input type="password" class="form-input" id="pwd-new" placeholder="Enter new password"
-                        maxlength="16">
-                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('pwd-new', this)"></i>
-                </div>
+            <div class="global-modal-footer">
+                <button class="btn-primary-global" onclick="savePassword()" style="width: 100%;">Update
+                    Password</button>
             </div>
-
-            <div class="form-group" style="text-align: left; position: relative;">
-                <label class="form-label">Confirm New Password</label>
-                <div style="position: relative;">
-                    <input type="password" class="form-input" id="pwd-confirm" placeholder="Re-enter new password"
-                        maxlength="16">
-                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('pwd-confirm', this)"></i>
-                </div>
-            </div>
-
-            <button class="btn btn-primary" onclick="savePassword()"
-                style="width: 100%; margin-top: 16px; padding: 12px;">Update Password</button>
         </div>
     </div>
 
@@ -5366,35 +5358,160 @@
         }
 
         // Filter Popup Logic
+        // Filter Popup Logic (Portal to Body)
         function toggleFilter(icon) {
-            let popup = icon.nextElementSibling;
-            // Handle new structure where icon is inside .th-icons
-            if (!popup) {
-                const wrapper = icon.closest('.th-icons');
-                if (wrapper) {
-                    // The popup is the sibling of the wrapper (.th-icons)
-                    popup = wrapper.nextElementSibling;
+            let popupId = icon.getAttribute('data-popup-id');
+            let popup;
+
+            // 1. Find the popup
+            if (popupId) {
+                // Already moved to body or identified
+                popup = document.getElementById(popupId);
+            } else {
+                // First time: Find sibling in Table
+                let sibling = icon.nextElementSibling;
+                if (!sibling) {
+                    const wrapper = icon.closest('.th-icons');
+                    if (wrapper) sibling = wrapper.nextElementSibling;
+                }
+
+                if (sibling && sibling.classList.contains('filter-popup')) {
+                    popup = sibling;
+                    // Assign ID and Link
+                    const id = 'filter-popup-' + Math.random().toString(36).substr(2, 9);
+                    popup.id = id;
+                    icon.setAttribute('data-popup-id', id);
+
+                    // Move to Body (Preserves Events)
+                    document.body.appendChild(popup);
                 }
             }
 
-            // Close all other popups
-            document.querySelectorAll('.filter-popup').forEach(p => {
-                if (p !== popup) p.classList.remove('show');
+            if (!popup) return;
+
+            // 2. Close other popups
+            document.querySelectorAll('.filter-popup.show').forEach(p => {
+                if (p.id !== popupId) {
+                    p.classList.remove('show');
+                    p.style.display = 'none';
+                }
             });
 
-            popup.classList.toggle('show');
+            // 3. Toggle Current
+            const isShowing = popup.classList.contains('show');
+            if (isShowing) {
+                popup.classList.remove('show');
+                popup.style.display = 'none';
+            } else {
+                // Show
+                popup.style.display = 'block';
+                popup.classList.add('show');
 
-            // Focus input if showing
-            if (popup.classList.contains('show')) {
+                // Position Fixed relative to Icon
+                popup.style.position = 'fixed';
+                popup.style.zIndex = '10001'; // Top of everything
+
+                const rect = icon.getBoundingClientRect();
+                const popupWidth = 200;
+
+                // Vertical: Below icon
+                popup.style.top = (rect.bottom + 5) + 'px';
+
+                // Horizontal: Prevent overflow
+                if (rect.left + popupWidth > window.innerWidth) {
+                    popup.style.left = 'auto';
+                    popup.style.right = (window.innerWidth - rect.right) + 'px';
+                } else {
+                    popup.style.left = (rect.left) + 'px';
+                    popup.style.right = 'auto';
+                }
+
                 const input = popup.querySelector('input, select');
                 if (input) input.focus();
             }
         }
 
-        // Close popups when clicking outside
+        function toggleFilter_old(icon) {
+            let popup = icon.nextElementSibling;
+            // Handle new structure where icon is inside .th-icons
+            if (!popup) {
+                const wrapper = icon.closest('.th-icons');
+                if (wrapper) {
+                    popup = wrapper.nextElementSibling;
+                }
+            }
+
+            if (!popup) return;
+
+            // Close all other popups
+            document.querySelectorAll('.filter-popup').forEach(p => {
+                if (p !== popup) {
+                    p.classList.remove('show');
+                    p.style.display = 'none'; // Ensure hidden
+                }
+            });
+
+            // Toggle current
+            const isShowing = popup.classList.contains('show');
+
+            if (isShowing) {
+                popup.classList.remove('show');
+                popup.style.display = 'none';
+            } else {
+                // Show and Position Fixed
+                popup.style.display = 'block';
+                popup.classList.add('show');
+
+                // Calculate position
+                const rect = icon.getBoundingClientRect();
+                const popupWidth = 200; // Expected width (min-width in CSS is 150px)
+
+                // Determine layout
+                popup.style.position = 'fixed';
+                popup.style.top = (rect.bottom + 5) + 'px';
+                popup.style.zIndex = '9999';
+
+                // Check right edge
+                if (rect.left + popupWidth > window.innerWidth) {
+                    popup.style.left = 'auto';
+                    popup.style.right = (window.innerWidth - rect.right) + 'px';
+                } else {
+                    popup.style.left = (rect.left - 10) + 'px'; // Slight offset
+                    popup.style.right = 'auto';
+                }
+
+                // Focus input
+                const input = popup.querySelector('input, select');
+                if (input) input.focus();
+            }
+        }
+
+        // Robust Close-on-Scroll Logic
+        const closeAllPopups = () => {
+            document.querySelectorAll('.filter-popup.show').forEach(p => {
+                p.classList.remove('show');
+                p.style.display = 'none';
+            });
+        };
+
+        // 1. Table Scroll
+        const scrollWrapper = document.querySelector('.table-scroll-wrapper');
+        if (scrollWrapper) {
+            scrollWrapper.addEventListener('scroll', closeAllPopups);
+        }
+
+        // 2. Window Scroll/Resize (Captures page scroll)
+        window.addEventListener('scroll', closeAllPopups, true);
+        window.addEventListener('resize', closeAllPopups);
+
+        // 3. Close on Outside Click (Updated)
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.th-content')) {
-                document.querySelectorAll('.filter-popup').forEach(p => p.classList.remove('show'));
+            // Check if click is inside any Icon OR any Open Popup
+            const isIcon = e.target.closest('.filter-icon');
+            const isPopup = e.target.closest('.filter-popup');
+
+            if (!isIcon && !isPopup) {
+                closeAllPopups();
             }
         });
 
@@ -5683,7 +5800,7 @@
                 closeProfileModal();
             }
         });
-        // --- UPGRADE JD MODAL LOGIC ---
+        // --- Update JD MODAL LOGIC ---
         const btnUpdateJd = document.getElementById('btn-update-jd');
         const jdUpdateModal = document.getElementById('jd-update-modal');
         const jdCloseBtn = document.getElementById('jd-close-btn');
@@ -5722,7 +5839,7 @@
             });
         }
 
-        // Drag & Drop for Upgrade JD
+        // Drag & Drop for Update JD
         if (jdDropzone) {
             jdDropzone.addEventListener('click', () => jdFileInput && jdFileInput.click());
 
@@ -5778,20 +5895,178 @@
             });
         }
 
-        // --- TABLE FILTER & DOWNLOAD LOGIC ---
+        // --- TABLE FILTER, SORT & DOWNLOAD LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
             const table = document.getElementById('results-table');
             const tbody = table ? table.querySelector('tbody') : null;
             const filters = document.querySelectorAll('.table-filter');
+            const sortIcons = document.querySelectorAll('.sort-icon');
             const emptyState = document.getElementById('candidate-empty-state');
             const downloadBtn = document.getElementById('btn-download-results');
 
-            console.log("Download Script Loaded");
-            console.log("Table Found:", !!table);
-            console.log("Download Button Found:", !!downloadBtn);
+            console.log("Table Script Loaded");
 
+            // Mock Data for Table
+            const candidates = [
+                { sn: 1, jd: 'v1.2', name: 'Aarav Sharma', city: 'Bengaluru', exp: 6.5, aiStatus: 'Strong Fit', hrStatus: 'Shortlisted', note: '' },
+                { sn: 2, jd: 'v1.2', name: 'Diya Gupta', city: 'Mumbai', exp: 2.0, aiStatus: 'Potential Fit', hrStatus: 'Rejected', note: 'Insufficient experience in production environments.' },
+                { sn: 3, jd: 'v1.2', name: 'Vihaan Singh', city: 'Delhi', exp: 4.0, aiStatus: 'Border line', hrStatus: 'Hold', note: 'Relocation to be discussed. Skill gap in advanced ML.' },
+                { sn: 4, jd: 'v1.2', name: 'Priya Patel', city: 'Hyderabad', exp: 8.0, aiStatus: 'Strong Fit', hrStatus: 'Shortlisted', note: '' },
+                { sn: 5, jd: 'v1.2', name: 'Arjun Kumar', city: 'Chennai', exp: 1.5, aiStatus: 'Low Match', hrStatus: 'Rejected', note: '' },
+                { sn: 6, jd: 'v1.1', name: 'Rohan Mehta', city: 'Pune', exp: 5.2, aiStatus: 'Potential Fit', hrStatus: 'Hold', note: 'Expected notice period is too long (3 months).' },
+                { sn: 7, jd: 'v1.0', name: 'Ananya Reddy', city: 'Bengaluru', exp: 3.8, aiStatus: 'Border line', hrStatus: 'Rejected', note: 'Education criteria not met.' },
+                { sn: 8, jd: 'v1.2', name: 'Karthik Iyer', city: 'Chennai', exp: 7.1, aiStatus: 'Strong Fit', hrStatus: 'Shortlisted', note: '' }
+            ];
+
+            // Helpers
+            function getRandomScore() {
+                const score = (Math.random() * 7) + 3;
+                return Math.round(score);
+            }
+
+            function getOverallScore(scores) {
+                const sum = scores.reduce((a, b) => a + b, 0);
+                return (sum / scores.length).toFixed(1);
+            }
+
+            function renderTable() {
+                if (!tbody) return;
+                tbody.innerHTML = '';
+
+                candidates.forEach(c => {
+                    const qualScore = getRandomScore();
+                    const relExpScore = getRandomScore();
+                    const totalExpScore = getRandomScore();
+                    const certScore = getRandomScore();
+                    const respScore = getRandomScore();
+                    const skillScore = getRandomScore();
+                    const overallScore = getOverallScore([qualScore, relExpScore, totalExpScore, certScore, respScore, skillScore]);
+
+                    const tr = document.createElement('tr');
+
+                    let badgeClass = '';
+                    switch (c.aiStatus) {
+                        case 'Strong Fit': badgeClass = 'fit'; break;
+                        case 'Potential Fit': badgeClass = 'potential'; break;
+                        case 'Border line': badgeClass = 'info'; break;
+                        case 'Low Match': badgeClass = 'unfit'; break;
+                    }
+
+                    let hrBadgeClass = '';
+                    switch (c.hrStatus) {
+                        case 'Shortlisted': hrBadgeClass = 'fit'; break;
+                        case 'Hold': hrBadgeClass = 'info'; break;
+                        case 'Rejected': hrBadgeClass = 'unfit'; break;
+                    }
+
+                    // Add data-value for sorting
+                    tr.innerHTML = `
+                        <td class="sticky-col sticky-col-left" style="left: 0;" data-value="${c.sn}">${c.sn}</td>
+                        <td class="sticky-col sticky-col-left" style="left: 60px;" data-value="${c.jd}"><a href="#" class="view-link view-jd-link">${c.jd}</a></td>
+                        <td class="sticky-col sticky-col-left" style="left: 180px;" data-value="${c.name}"><a href="#" class="view-link view-resume-link">${c.name}</a></td>
+                        <td data-value="${c.city}">${c.city}</td>
+                        
+                        <td data-value="${qualScore}">${qualScore}/10</td>
+                        <td data-value="${relExpScore}">${relExpScore}/10</td>
+                        <td data-value="${totalExpScore}">${totalExpScore}/10</td>
+                        <td data-value="${certScore}">${certScore}/10</td>
+                        <td data-value="${respScore}">${respScore}/10</td>
+                        <td data-value="${skillScore}">${skillScore}/10</td>
+                        
+                        <td data-value="${overallScore}"><strong>${overallScore}/10</strong></td>
+
+                        <td class="sticky-col sticky-col-right" style="right: 140px;" data-value="${c.aiStatus}"><span class="badge ${badgeClass}">${c.aiStatus}</span></td>
+                        <td class="sticky-col sticky-col-right" style="right: 0;" data-value="${c.hrStatus}">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="badge ${hrBadgeClass}">${c.hrStatus}</span>
+                                ${c.note ? `
+                                <i class="fas fa-sticky-note note-icon" 
+                                   onmouseenter="showTooltip(event, '${c.note}')" 
+                                   onmouseleave="hideTooltip()"
+                                   title="HR Note"></i>
+                                ` : ''}
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Initial Render
+            renderTable();
 
             // 1. Filter Logic
+            // Sorting Logic
+            function applySort(col, order) {
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                rows.sort((a, b) => {
+                    let index = -1;
+                    switch (col) {
+                        case 'jd-version': index = 1; break;
+                        case 'name': index = 2; break;
+                        case 'city': index = 3; break;
+                        case 'qual-score': index = 4; break;
+                        case 'rel-exp-score': index = 5; break;
+                        case 'total-exp-score': index = 6; break;
+                        case 'cert-score': index = 7; break;
+                        case 'resp-score': index = 8; break;
+                        case 'skill-score': index = 9; break;
+                        case 'overall-score': index = 10; break;
+                        case 'ai-status': index = 11; break;
+                        case 'hr-status': index = 12; break;
+                        case 'sn': index = 0; break;
+                    }
+
+                    if (index === -1) return 0;
+
+                    const aVal = a.children[index].getAttribute('data-value');
+                    const bVal = b.children[index].getAttribute('data-value');
+
+                    const aNum = parseFloat(aVal);
+                    const bNum = parseFloat(bVal);
+
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return order === 'asc' ? aNum - bNum : bNum - aNum;
+                    }
+                    return order === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                });
+
+                tbody.innerHTML = '';
+                rows.forEach(r => tbody.appendChild(r));
+
+                // Update Icons
+                sortIcons.forEach(icon => {
+                    if (icon.dataset.col === col) {
+                        icon.dataset.order = order;
+                        // Remove existing classes first to be safe
+                        icon.classList.remove('fa-sort', 'fa-sort-up', 'fa-sort-down');
+                        icon.classList.add(order === 'asc' ? 'fa-sort-up' : 'fa-sort-down');
+                        icon.classList.add('active'); // active class for color
+                    } else {
+                        icon.classList.remove('fa-sort-up', 'fa-sort-down', 'active');
+                        icon.classList.add('fa-sort');
+                        icon.dataset.order = 'asc'; // Reset order
+                    }
+                });
+
+                // Update Visibility of Clear Button
+                filterTable();
+            }
+
+            // Click Listeners for Sort
+            sortIcons.forEach(icon => {
+                icon.addEventListener('click', () => {
+                    const col = icon.dataset.col;
+                    const currentOrder = icon.dataset.order || 'asc';
+                    const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+                    applySort(col, newOrder);
+                });
+            });
+
+            function updatePagination() {
+                // Placeholder: No pagination controls in current design
+            }
             function filterTable() {
                 const rows = tbody.querySelectorAll('tr');
                 let visibleCount = 0;
@@ -5800,26 +6075,30 @@
                     let show = true;
 
                     filters.forEach(filter => {
-                        if (!show) return; // Optimization
+                        if (!show) return;
 
                         const col = filter.getAttribute('data-col');
                         const val = filter.value.toLowerCase();
-                        const tagName = filter.tagName.toLowerCase(); // 'input' or 'select'
+                        const tagName = filter.tagName.toLowerCase();
 
                         if (val === 'all' || val === '') return;
 
                         let cellText = '';
-                        // Map data-col to column index (0-based)
                         let cellIndex = -1;
                         switch (col) {
                             case 'jd-version': cellIndex = 1; break;
                             case 'name': cellIndex = 2; break;
                             case 'city': cellIndex = 3; break;
-                            case 'exp': cellIndex = 4; break;
-                            case 'skill-score': cellIndex = 5; break;
-                            case 'overall-score': cellIndex = 6; break;
-                            case 'ai-status': cellIndex = 7; break;
-                            case 'hr-status': cellIndex = 8; break;
+                            case 'qual-score': cellIndex = 4; break;
+                            case 'rel-exp-score': cellIndex = 5; break;
+                            case 'total-exp-score': cellIndex = 6; break;
+                            case 'cert-score': cellIndex = 7; break;
+                            case 'resp-score': cellIndex = 8; break;
+                            // skill-score is col 9
+                            case 'skill-score': cellIndex = 9; break;
+                            case 'overall-score': cellIndex = 10; break;
+                            case 'ai-status': cellIndex = 11; break;
+                            case 'hr-status': cellIndex = 12; break;
                         }
 
                         if (cellIndex > -1) {
@@ -5833,7 +6112,7 @@
                                         show = false;
                                     }
                                 } else {
-                                    if (!cellText.includes(val)) {
+                                    if (!cellText.startsWith(val)) {
                                         show = false;
                                     }
                                 }
@@ -5845,14 +6124,67 @@
                     if (show) visibleCount++;
                 });
 
-                // Toggle Empty State
-                if (visibleCount === 0) {
-                    if (emptyState) emptyState.classList.add('active');
-                } else {
-                    if (emptyState) emptyState.classList.remove('active');
+                // Handle Empty State
+                if (emptyState) {
+                    if (visibleCount === 0) emptyState.classList.add('active');
+                    else emptyState.classList.remove('active');
                 }
+
+                // Show/Hide Clear Filters Button (Now includes Sorts)
+                const clearBtn = document.getElementById('btn-clear-filters');
+                if (clearBtn) {
+                    let anyFilterActive = false;
+                    filters.forEach(f => {
+                        if (f.value !== '' && f.value !== 'all') anyFilterActive = true;
+                    });
+
+                    let anySortActive = false;
+                    sortIcons.forEach(icon => {
+                        const isSorted = icon.classList.contains('fa-sort-up') || icon.classList.contains('fa-sort-down');
+                        const isDefaultSort = icon.dataset.col === 'sn' && icon.dataset.order === 'asc';
+
+                        if (isSorted && !isDefaultSort) {
+                            anySortActive = true;
+                        }
+                    });
+
+                    clearBtn.style.display = (anyFilterActive || anySortActive) ? 'flex' : 'none';
+                }
+
+                updatePagination();
             }
 
+            // Clear Filters & Sorts Logic
+            const clearFiltersBtn = document.getElementById('btn-clear-filters');
+            if (clearFiltersBtn) {
+                clearFiltersBtn.addEventListener('click', () => {
+                    // 1. Reset Filters
+                    filters.forEach(filter => {
+                        if (filter.tagName === 'SELECT') filter.value = 'all';
+                        else filter.value = '';
+
+                        // Reset visual icon state
+                        const popup = filter.closest('.filter-popup');
+                        if (popup) {
+                            const icon = popup.previousElementSibling;
+                            if (icon && icon.classList.contains('filter-icon')) {
+                                icon.classList.remove('active');
+                            }
+                        }
+                    });
+
+                    // 2. Reset Sorts
+                    sortIcons.forEach(icon => {
+                        icon.setAttribute('data-order', icon.getAttribute('data-col') === 'sn' ? 'asc' : 'desc');
+                        icon.classList.remove('fa-sort-up', 'fa-sort-down');
+                        icon.classList.add('fa-sort');
+                    });
+
+                    // 3. Re-sort by SN (Default) and Filter
+                    applySort('sn', 'asc');
+                    filterTable();
+                });
+            }
             // Attach listeners
             filters.forEach(f => {
                 f.addEventListener('input', filterTable);
@@ -5874,18 +6206,26 @@
                     let csvContent = "";
 
                     // Headers
-                    const headers = ["SN", "JD Version", "Candidate Name", "City", "Total Exp", "Skill Score", "Overall Score", "AI Status", "HR Status"];
+                    const headers = [
+                        "SN", "JD Version", "Candidate Name", "City",
+                        "Qualification Score", "Relevant Exp Score", "Total Exp Score",
+                        "Certification Score", "Responsibility Score", "Skillset Score",
+                        "Overall Score", "AI Status", "HR Status"
+                    ];
                     csvContent += headers.join(",") + "\n";
 
                     // Data
                     rows.forEach(row => {
                         const cols = row.querySelectorAll('td');
                         const rowData = [];
-                        // We strictly want columns 0 to 8 (9 columns) matching our headers
-                        // SN is col 0
-                        for (let i = 0; i <= 8; i++) {
-                            let text = cols[i] ? cols[i].textContent.trim().replace(/"/g, '""') : ""; // Escape quotes
-                            if (text.includes(',')) text = `"${text}"`; // Quote if comma
+                        // We strictly want columns 0 to 12
+                        for (let i = 0; i <= 12; i++) {
+                            // Extract text, remove any HTML tags if sticky icons/link text
+                            // Use textContent which is safe
+                            let text = cols[i] ? cols[i].textContent.trim().replace(/"/g, '""') : "";
+                            // Cleanup newlines/spaces
+                            text = text.replace(/\s+/g, ' ');
+                            if (text.includes(',')) text = `"${text}"`;
                             rowData.push(text);
                         }
                         csvContent += rowData.join(",") + "\n";
@@ -5930,7 +6270,181 @@
                 link.click();
                 document.body.removeChild(link);
             }
+
+
+            // 2. Sorting Logic
+
+            sortIcons.forEach(icon => {
+                icon.addEventListener('click', () => {
+                    const col = icon.getAttribute('data-col');
+                    const order = icon.getAttribute('data-order');
+                    const newOrder = order === 'asc' ? 'desc' : 'asc';
+
+                    // Update Icon
+                    icon.setAttribute('data-order', newOrder);
+                    sortIcons.forEach(i => i.classList.replace('fa-sort-up', 'fa-sort'));
+                    sortIcons.forEach(i => i.classList.replace('fa-sort-down', 'fa-sort'));
+
+                    if (newOrder === 'asc') {
+                        icon.classList.replace('fa-sort', 'fa-sort-up');
+                    } else {
+                        icon.classList.replace('fa-sort', 'fa-sort-down');
+                    }
+
+                    applySort(col, newOrder);
+                });
+            });
+
+            function applySort(col, order) {
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                rows.sort((a, b) => {
+                    let valA, valB;
+                    let index = -1;
+
+                    // Map col to index
+                    switch (col) {
+                        case 'sn': index = 0; break;
+                        case 'jd-version': index = 1; break;
+                        case 'name': index = 2; break;
+                        case 'city': index = 3; break;
+                        case 'qual-score': index = 4; break;
+                        case 'rel-exp-score': index = 5; break;
+                        case 'total-exp-score': index = 6; break;
+                        case 'cert-score': index = 7; break;
+                        case 'resp-score': index = 8; break;
+                        case 'skill-score': index = 9; break;
+                        case 'overall-score': index = 10; break;
+                        case 'ai-status': index = 11; break;
+                        case 'hr-status': index = 12; break;
+                    }
+
+                    if (index === -1) return 0;
+
+                    const cellA = a.children[index];
+                    const cellB = b.children[index];
+
+                    // Use data-value for robust sorting
+                    valA = cellA.getAttribute('data-value') || cellA.textContent.trim();
+                    valB = cellB.getAttribute('data-value') || cellB.textContent.trim();
+
+                    // Check for numbers
+                    const numA = parseFloat(valA);
+                    const numB = parseFloat(valB);
+
+                    if (!isNaN(numA) && !isNaN(numB)) {
+                        return order === 'asc' ? numA - numB : numB - numA;
+                    }
+
+                    return order === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                });
+
+                // Re-append
+                rows.forEach(row => tbody.appendChild(row));
+                updatePagination();
+            }
+
+            // 3. HR Note Logic
+            // Add Modal HTML dynamically if not exists
+            if (!document.getElementById('hr-note-modal')) {
+                const modalHTML = `
+                <div id="hr-note-modal" class="modal-overlay">
+                    <div class="modal-container" style="max-width: 400px; width: 90%;">
+                        <div class="global-modal-header">
+                            <div class="global-modal-title">HR Review Note</div>
+                            <button class="global-close-btn" id="close-note-modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="global-modal-body" id="note-content" style="min-height: 100px;">
+                            <!-- Content goes here -->
+                        </div>
+                        <div class="global-modal-footer">
+                             <button class="btn-primary-global" onclick="document.getElementById('hr-note-modal').style.display='none'">Close</button>
+                        </div>
+                    </div>
+                </div>`;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+
+            // Attach listeners to note icons (delegation)
+            tbody.addEventListener('click', (e) => {
+                if (e.target.classList.contains('note-icon')) {
+                    const row = e.target.closest('tr');
+                    const name = row.children[2].textContent.trim(); // Name col
+                    const noteModal = document.getElementById('hr-note-modal');
+                    const noteContent = document.getElementById('note-content');
+
+                    // Mock notes based on status or random
+                    const mockNotes = [
+                        "Candidate has strong technical skills but expects a higher package.",
+                        "Good cultural fit, but notice period is 90 days.",
+                        "Awaiting background verification documents.",
+                        "Rejected due to lack of hands-on experience in AWS.",
+                        "Shortlisted for technical round 2."
+                    ];
+                    const randomNote = mockNotes[Math.floor(Math.random() * mockNotes.length)];
+
+                    noteContent.innerHTML = `<strong>Candidate:</strong> ${name}<br><br><strong>Note:</strong><br>${randomNote}`;
+
+                    noteModal.style.display = 'flex';
+                }
+            });
+
+            // Close modal logic
+            document.addEventListener('click', (e) => {
+                const noteModal = document.getElementById('hr-note-modal');
+                if (noteModal && (e.target === noteModal || e.target.closest('#close-note-modal'))) {
+                    noteModal.style.display = 'none';
+                }
+            });
+
         });
+
+        // --- JD STATUS LOGIC ---
+        function updateJDStatus() {
+            const select = document.getElementById('jd-select');
+            const statusLabel = document.getElementById('jd-status-label');
+            const uploadBtn = document.getElementById('upload-btn');
+            const analysisBtn = document.getElementById('start-analysis-btn');
+
+            if (!select || !statusLabel) return;
+
+            const selectedOption = select.options[select.selectedIndex];
+            const status = selectedOption.getAttribute('data-status');
+
+            // Reset classes
+            statusLabel.className = 'jd-status-badge';
+
+            // Enable/Disable buttons based on status
+            const isActive = status === 'active';
+
+            if (isActive) {
+                statusLabel.textContent = 'Approved and Active';
+                statusLabel.classList.add('status-active');
+
+                if (uploadBtn) uploadBtn.classList.remove('btn-disabled');
+                if (analysisBtn) analysisBtn.classList.remove('btn-disabled');
+            } else if (status === 'inactive') {
+                statusLabel.textContent = 'Inactive';
+                statusLabel.classList.add('status-inactive');
+
+                if (uploadBtn) uploadBtn.classList.add('btn-disabled');
+                if (analysisBtn) analysisBtn.classList.add('btn-disabled');
+            } else if (status === 'disapproved') {
+                statusLabel.textContent = 'Disapproved';
+                statusLabel.classList.add('status-disapproved');
+
+                if (uploadBtn) uploadBtn.classList.add('btn-disabled');
+                if (analysisBtn) analysisBtn.classList.add('btn-disabled');
+            }
+        }
+
+        // Attach listener
+        const jdSelectElement = document.getElementById('jd-select');
+        if (jdSelectElement) {
+            jdSelectElement.addEventListener('change', updateJDStatus);
+            // Initial call
+            updateJDStatus();
+        }
     </script>
 </body>
 
