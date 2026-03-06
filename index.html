@@ -73,7 +73,7 @@
         .page-context {
             font-weight: 300;
             opacity: 0.9;
-            border-left: 1px solid rgba(255, 255, 255, 0.3);
+
             padding-left: 24px;
         }
 
@@ -385,16 +385,23 @@
             font-weight: 600;
             font-size: 0.85rem;
             border-bottom: 2px solid var(--card-bg);
+            border-right: 1px solid #e2e8f0;
             white-space: nowrap;
         }
 
         td {
             padding: 14px 16px;
             border-bottom: 1px solid #eee;
+            border-right: 1px solid #e2e8f0;
             font-size: 0.9rem;
             color: var(--text-dark);
             white-space: nowrap;
             background-color: white;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-right: none;
         }
 
         /* Sticky Header for Resumes Table */
@@ -456,20 +463,24 @@
             width: 200px;
         }
 
-        /* AI Status: Right 0, Width 130px */
+        /* AI Status: Right 0, Width 140px */
         #results-table th:nth-child(12),
         #results-table td:nth-child(12),
         #analysis-results-table th:nth-child(11),
         #analysis-results-table td:nth-child(11) {
-            min-width: 130px;
-            max-width: 130px;
-            width: 130px;
+            min-width: 140px;
+            max-width: 140px;
+            width: 140px;
+            border-left: 1px solid #e2e8f0;
         }
 
         /* HR Status: Right 0 */
         #results-table th:nth-child(13),
         #results-table td:nth-child(13) {
             min-width: 140px;
+            max-width: 140px;
+            width: 140px;
+            border-left: 1px solid #e2e8f0;
         }
 
         .sticky-col-left {
@@ -485,34 +496,54 @@
 
         /* Status Badges */
         .badge {
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 700;
-            text-transform: uppercase;
+            text-transform: capitalize;
             white-space: nowrap;
             display: inline-block;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
+            text-align: center;
+            min-width: 80px;
         }
 
         .badge.fit {
-            background-color: var(--success);
-            color: white;
+            background-color: #dcfce7;
+            color: #166534;
         }
 
         .badge.unfit {
-            background-color: var(--danger);
-            color: white;
+            background-color: #fee2e2;
+            color: #991b1b;
         }
 
         .badge.info {
-            background-color: var(--warning);
-            color: white;
+            background-color: #fef3c7;
+            color: #92400e;
         }
 
         .badge.potential {
-            background-color: var(--primary);
-            color: white;
+            background-color: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .badge.hr-shortlisted {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .badge.hr-rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .badge.hr-hold {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
         }
 
         .view-link {
@@ -631,48 +662,45 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: var(--primary);
-            /* DashBoard Blue */
+            background: linear-gradient(135deg, #4A62DD 0%, #3a4eb5 100%);
+            color: var(--text-light);
             border-radius: 12px 12px 0 0;
             flex-shrink: 0;
         }
 
         .global-modal-title {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: white;
+            color: #ffffff !important;
             letter-spacing: -0.02em;
         }
 
         .global-close-btn {
-            background: transparent;
-            border: none;
-            font-size: 1.5rem;
-            /* Increased size */
-            color: #FC4860;
-            /* Red (var(--danger)) */
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
             cursor: pointer;
-            width: 44px;
-            /* Increased width */
-            height: 44px;
-            /* Increased height */
-            border-radius: 50%;
+            line-height: 1;
+            background-color: var(--danger);
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            border-radius: 6px;
+            transition: all 0.2s;
+            border: none;
         }
 
         .global-close-btn:hover {
-            background-color: #f1f5f9;
-            color: var(--danger);
-            transform: rotate(90deg);
+            opacity: 0.9;
+            transform: scale(1.05);
         }
 
         .global-modal-body {
-            padding: 24px;
+            padding: 30px;
+            background-color: #f0f7ff;
             overflow-y: auto;
-            /* bg color can be overridden per modal if needed */
         }
 
         .global-modal-footer {
@@ -693,16 +721,15 @@
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            border: 1px solid #FC4860;
-            background: #fee2e2;
-            color: #FC4860;
+            border: none;
+            background-color: var(--danger);
+            color: white;
             font-size: 0.9rem;
             transition: all 0.2s;
         }
 
         .btn-cancel-global:hover {
-            background-color: #FC4860;
-            color: white;
+            opacity: 0.9;
         }
 
         .btn-primary-global {
@@ -757,11 +784,12 @@
         }
 
         .modal-container {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             background-color: white;
             width: 700px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
             transform: translateY(20px);
             transition: transform 0.3s;
             max-height: 90vh;
@@ -769,23 +797,42 @@
             flex-direction: column;
         }
 
-        .modal-overlay.active .modal-container {
-            transform: translateY(0);
-        }
-
         .modal-header {
             padding: 24px;
-            border-bottom: 1px solid #eee;
+            background: linear-gradient(135deg, #4A62DD 0%, #3a4eb5 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             flex-shrink: 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: var(--text-light);
         }
 
         .modal-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary);
+            color: #ffffff !important;
+        }
+
+        .close-modal {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1;
+            background-color: var(--danger);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
         }
 
         /* Resume Selection Table Styles */
@@ -853,7 +900,7 @@
         }
 
         .modal-body {
-            padding: 24px;
+            padding: 30px;
             background-color: #f0f7ff;
             /* Light blue background as in image */
             overflow-y: auto;
@@ -864,7 +911,7 @@
         .modal-jd-card {
             background-color: white;
             border-radius: 12px;
-            padding: 16px;
+            padding: 20px;
             display: flex;
             align-items: center;
             gap: 16px;
@@ -990,13 +1037,18 @@
         }
 
         .btn-cancel {
-            background-color: #f1f5f9;
-            color: var(--text-dark);
+            background-color: var(--danger);
+            color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-cancel:hover {
+            opacity: 0.9;
         }
 
         .btn-confirm {
@@ -2048,33 +2100,53 @@
             color: var(--text-muted);
         }
 
-        /* JD Status Badge */
-        .jd-status-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin-left: 12px;
-            display: inline-block;
-            text-transform: uppercase;
+        #jd-version-link {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            margin: 0 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
         }
 
-        .status-active {
+        #jd-version-link:hover {
+            background-color: rgba(74, 98, 221, 0.1);
+            text-decoration: underline;
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: capitalize;
+            white-space: nowrap;
+            display: inline-block;
+            letter-spacing: 0.01em;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .badge.approved.active {
             background-color: #dcfce7;
             color: #166534;
             border: 1px solid #bbf7d0;
         }
 
-        .status-inactive {
+        .badge.approved.inactive {
             background-color: #fee2e2;
             color: #991b1b;
             border: 1px solid #fecaca;
         }
 
-        .status-disapproved {
-            background-color: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fee2e2;
+        .badge.disapproved {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
         }
 
         /* Dropdown Option Colors */
@@ -2099,6 +2171,73 @@
             background-color: #94a3b8 !important;
             color: #e2e8f0 !important;
         }
+
+        /* Branding Logo Styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-logo {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #4A62DD 0%, #5FE3FB 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 12px rgba(74, 98, 221, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .app-logo:hover {
+            transform: rotate(5deg) scale(1.1);
+            box-shadow: 0 6px 16px rgba(95, 227, 251, 0.4);
+        }
+
+        .app-logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 45%, rgba(255, 255, 255, 0.2) 50%, transparent 55%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%);
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%);
+            }
+        }
+
+        /* JD DROP DOWN COLOR CODING */
+        .jd-select option.opt-active {
+            color: #166534;
+            font-weight: 600;
+        }
+
+        .jd-select option.opt-inactive {
+            color: #64748b;
+            /* Slate grey to be very different from red */
+            font-weight: 600;
+        }
+
+        .jd-select option.opt-disapproved {
+            color: #991b1b;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -2106,12 +2245,17 @@
     <!-- 1) GLOBAL HEADER -->
     <header class="global-header">
         <div class="header-left">
-            <div class="logo">SmartHire</div>
-            <div class="page-context">Recruiter Dashboard</div>
+            <div class="logo-container">
+                <div class="app-logo">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="logo"><span style="font-weight: 400; color: rgba(255,255,255,0.85);">Smart</span><span
+                        style="font-weight: 700;">Hire</span></div>
+            </div>
+            <div class="page-context" style="font-weight: 500; padding-left: 115px; font-size: 1.1rem; opacity: 0.9;">
+                Recruiter Dashboard - AI/ML Engineer - v1.2</div>
         </div>
-        <div class="header-right"><span>Welcome back,
-                Nikhil Sai !</span>
-
+        <div class="header-right">
             <!-- Notification Container -->
             <div class="notification-container" style="position: relative; margin-right: 15px;">
                 <div class="notification-icon" onclick="toggleNotifications()">
@@ -2160,9 +2304,11 @@
                     </div>
                 </div>
             </div>
+            <span>Welcome back, Likith V !</span>
             <div class="user-profile-container" style="position: relative;">
                 <div class="user-profile" onclick="toggleProfileDropdown()">
-                    <div class="avatar">N</div>
+                    <div class="avatar">L</div>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: white;"></i>
                 </div>
                 <!-- Profile Dropdown Menu -->
                 <div class="profile-dropdown" id="profile-dropdown">
@@ -2413,26 +2559,28 @@
                 <!-- 3) JOB CONTEXT HEADER -->
                 <div class="job-context-header">
                     <div class="jd-icon"><i class="fas fa-briefcase"></i></div><select class="jd-select" id="jd-select">
-                        <option value="AI/ML Engineer" data-version="v1.2" data-status="active" class="opt-active">AI/ML
+                        <option value="AI/ML Engineer" data-version="v1.2" data-status="active" class="opt-active">✔
+                            AI/ML
                             Engineer</option>
-                        <option value="Software Engineer" data-version="v2.0" data-status="active" class="opt-active">
+                        <option value="Software Engineer" data-version="v2.0" data-status="active" class="opt-active">✔
                             Software Engineer</option>
                         <option value="Product Manager" data-version="v1.0" data-status="disapproved"
-                            class="opt-disapproved">Product Manager</option>
-                        <option value="Data Scientist" data-version="v1.5" data-status="active" class="opt-active">Data
+                            class="opt-disapproved">✘ Product Manager</option>
+                        <option value="Data Scientist" data-version="v1.5" data-status="active" class="opt-active">✔
+                            Data
                             Scientist</option>
                         <option value="Marketing Specialist" data-version="v1.1" data-status="inactive"
-                            class="opt-inactive">Marketing Specialist</option>
+                            class="opt-inactive">✘ Marketing Specialist</option>
                         <option value="Sales Executive" data-version="v1.0" data-status="inactive" class="opt-inactive">
-                            Sales Executive</option>
+                            ✘ Sales Executive</option>
                         <option value="Customer Support Rep" data-version="v1.0" data-status="active"
-                            class="opt-active">Customer Support Rep</option>
+                            class="opt-active">✔ Customer Support Rep</option>
                         <option value="Financial Analyst" data-version="v2.1" data-status="disapproved"
-                            class="opt-disapproved">Financial Analyst</option>
+                            class="opt-disapproved">✘ Financial Analyst</option>
                     </select>
-                    <a href="#" id="current-jd-version" class="view-link view-jd-link"
-                        style="background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; margin: 0 10px; display: inline-block; text-decoration: none; cursor: pointer;">v1.2</a>
-                    <span id="jd-status-label" class="jd-status-badge status-active">Approved and Active</span>
+                    <a id="jd-version-link" href="#" target="_blank">v1.2</a>
+                    <span id="jd-header-status" class="badge approved active"
+                        style="text-transform: uppercase;">Approved & Active</span>
                     <button class="btn-update" id="btn-update-jd">Update JD</button>
                 </div>
                 <!-- 4) KPI CARDS SECTION -->
@@ -2705,75 +2853,105 @@
                                     </th>
 
                                     <!-- Qualification Score -->
-                                    <th style="min-width: 100px;">
+                                    <th style="min-width: 70px; text-align: center;">
                                         <div class="th-content">
-                                            Qualification Score
+                                            Qual.
                                             <div class="th-icons">
                                                 <i class="fas fa-sort sort-icon" data-col="qual-score"
                                                     data-order="desc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="qual-score"
+                                                    placeholder="Search Score">
                                             </div>
                                         </div>
                                     </th>
 
                                     <!-- Relevant Exp Score -->
-                                    <th style="min-width: 100px;">
+                                    <th style="min-width: 80px; text-align: center;">
                                         <div class="th-content">
-                                            Relevant Exp Score
+                                            Rel. Exp
                                             <div class="th-icons">
                                                 <i class="fas fa-sort sort-icon" data-col="rel-exp-score"
                                                     data-order="desc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="rel-exp-score"
+                                                    placeholder="Search Score">
                                             </div>
                                         </div>
                                     </th>
 
                                     <!-- Total Exp Score -->
-                                    <th style="min-width: 100px;">
+                                    <th style="min-width: 80px; text-align: center;">
                                         <div class="th-content">
-                                            Total Exp Score
+                                            Total Exp
                                             <div class="th-icons">
                                                 <i class="fas fa-sort sort-icon" data-col="total-exp-score"
                                                     data-order="desc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="total-exp-score"
+                                                    placeholder="Search Score">
                                             </div>
                                         </div>
                                     </th>
 
                                     <!-- Certification Score -->
-                                    <th style="min-width: 110px;">
+                                    <th style="min-width: 70px; text-align: center;">
                                         <div class="th-content">
-                                            Certification Score
+                                            Cert.
                                             <div class="th-icons">
                                                 <i class="fas fa-sort sort-icon" data-col="cert-score"
                                                     data-order="desc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="cert-score"
+                                                    placeholder="Search Score">
                                             </div>
                                         </div>
                                     </th>
 
                                     <!-- Responsibility Score -->
-                                    <th style="min-width: 120px;">
+                                    <th style="min-width: 70px; text-align: center;">
                                         <div class="th-content">
-                                            Responsibility Score
+                                            Resp.
                                             <div class="th-icons">
                                                 <i class="fas fa-sort sort-icon" data-col="resp-score"
                                                     data-order="desc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="resp-score"
+                                                    placeholder="Search Score">
                                             </div>
                                         </div>
                                     </th>
 
                                     <!-- Skillset Score -->
-                                    <th style="min-width: 100px;">
+                                    <th style="min-width: 70px; text-align: center;">
                                         <div class="th-content">
-                                            Skillset Score
+                                            Skill
                                             <div class="th-icons">
                                                 <i class="fas fa-sort sort-icon" data-col="skill-score"
                                                     data-order="desc"></i>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="skill-score"
+                                                    placeholder="Search Score">
                                             </div>
                                         </div>
                                     </th>
 
                                     <!-- Overall Score (Sort + Filter) -->
-                                    <th style="min-width: 100px;">
+                                    <th style="min-width: 80px; text-align: center;">
                                         <div class="th-content">
-                                            Overall Score
+                                            Overall
                                             <div class="th-icons">
                                                 <i class="fas fa-sort sort-icon" data-col="overall-score"
                                                     data-order="desc"></i>
@@ -2850,7 +3028,7 @@
                                 <option>25</option>
                                 <option>50</option>
                             </select></div>
-                        <div>1–8 of 325</div>
+                        <div>1–5 of 322</div>
                         <div class="page-controls"><button class="page-btn"><i
                                     class="fas fa-chevron-left"></i></button><button class="page-btn"><i
                                     class="fas fa-chevron-right"></i></button>
@@ -4914,8 +5092,11 @@
             </div>
             <div class="global-modal-body" style="padding: 0;">
                 <div style="padding: 16px 24px 0;">
-                    <div style="font-size: 0.95rem; color: var(--text-muted);">Selected JD: <strong id="jd-update-title"
-                            style="color: var(--text-dark);">AI/ML Engineer</strong></div>
+                    <div style="font-size: 0.95rem; color: var(--text-muted);">Selected JD:
+                        <strong id="jd-update-title"
+                            style="color: var(--primary); background-color: rgba(74, 98, 221, 0.1); padding: 2px 10px; border-radius: 12px; border: 1px solid rgba(74, 98, 221, 0.2);">AI/ML
+                            Engineer</strong>
+                    </div>
                 </div>
                 <div class="jd-dropzone" id="jd-dropzone">
                     <i class="fas fa-cloud-upload-alt jd-upload-icon"></i>
@@ -4947,7 +5128,7 @@
             <div class="global-modal-body">
                 <div class="profile-section">
                     <div class="profile-avatar-large">
-                        <div id="p-avatar-text" class="avatar-large-text">N</div>
+                        <div id="p-avatar-text" class="avatar-large-text">L</div>
                         <img id="p-avatar-img"
                             style="display: none; width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
                     </div>
@@ -4959,19 +5140,19 @@
 
                 <div class="form-group">
                     <label class="form-label">Name</label>
-                    <input type="text" class="form-input" id="p-name" value="Nikhil Sai"
+                    <input type="text" class="form-input" id="p-name" value="Likith V"
                         style="font-weight: 700; color: var(--primary);">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="p-email" value="nikhil.sai@example.com" readonly
+                    <input type="email" class="form-input" id="p-email" value="likith.v@example.com" readonly
                         style="font-weight: 700; color: var(--primary);">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Phone</label>
-                    <input type="text" class="form-input" id="p-phone" value="+91 95424 52750">
+                    <input type="text" class="form-input" id="p-phone" value="+91 79895 55306">
                     <div class="error-text"></div>
                 </div>
             </div>
@@ -5912,10 +6093,7 @@
                 { sn: 2, jd: 'v1.2', name: 'Diya Gupta', city: 'Mumbai', exp: 2.0, aiStatus: 'Potential Fit', hrStatus: 'Rejected', note: 'Insufficient experience in production environments.' },
                 { sn: 3, jd: 'v1.2', name: 'Vihaan Singh', city: 'Delhi', exp: 4.0, aiStatus: 'Border line', hrStatus: 'Hold', note: 'Relocation to be discussed. Skill gap in advanced ML.' },
                 { sn: 4, jd: 'v1.2', name: 'Priya Patel', city: 'Hyderabad', exp: 8.0, aiStatus: 'Strong Fit', hrStatus: 'Shortlisted', note: '' },
-                { sn: 5, jd: 'v1.2', name: 'Arjun Kumar', city: 'Chennai', exp: 1.5, aiStatus: 'Low Match', hrStatus: 'Rejected', note: '' },
-                { sn: 6, jd: 'v1.1', name: 'Rohan Mehta', city: 'Pune', exp: 5.2, aiStatus: 'Potential Fit', hrStatus: 'Hold', note: 'Expected notice period is too long (3 months).' },
-                { sn: 7, jd: 'v1.0', name: 'Ananya Reddy', city: 'Bengaluru', exp: 3.8, aiStatus: 'Border line', hrStatus: 'Rejected', note: 'Education criteria not met.' },
-                { sn: 8, jd: 'v1.2', name: 'Karthik Iyer', city: 'Chennai', exp: 7.1, aiStatus: 'Strong Fit', hrStatus: 'Shortlisted', note: '' }
+                { sn: 5, jd: 'v1.2', name: 'Arjun Kumar', city: 'Chennai', exp: 1.5, aiStatus: 'Low Match', hrStatus: 'Rejected', note: '' }
             ];
 
             // Helpers
@@ -5954,9 +6132,9 @@
 
                     let hrBadgeClass = '';
                     switch (c.hrStatus) {
-                        case 'Shortlisted': hrBadgeClass = 'fit'; break;
-                        case 'Hold': hrBadgeClass = 'info'; break;
-                        case 'Rejected': hrBadgeClass = 'unfit'; break;
+                        case 'Shortlisted': hrBadgeClass = 'hr-shortlisted'; break;
+                        case 'Hold': hrBadgeClass = 'hr-hold'; break;
+                        case 'Rejected': hrBadgeClass = 'hr-rejected'; break;
                     }
 
                     // Add data-value for sorting
