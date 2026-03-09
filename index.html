@@ -253,7 +253,7 @@
         }
 
         .kpi-card {
-            background-color: var(--card-bg);
+            background-color: white;
             border-radius: 12px;
             padding: 16px;
             box-shadow: 0 4px 6px rgba(74, 98, 221, 0.1);
@@ -673,6 +673,58 @@
             font-weight: 700;
             color: #ffffff !important;
             letter-spacing: -0.02em;
+        }
+
+        .global-minimize-btn {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1;
+            background-color: var(--warning);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .global-minimize-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        .modal-container.minimized {
+            width: 350px !important;
+            position: fixed !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            top: auto !important;
+            left: auto !important;
+            transform: none !important;
+            margin: 0 !important;
+            max-height: none !important;
+        }
+
+        .modal-container.minimized .global-modal-body,
+        .modal-container.minimized .global-modal-footer,
+        .modal-container.minimized .modal-header-tabs {
+            display: none !important;
+        }
+
+        .global-modal.overlay-minimized,
+        .modal-overlay.overlay-minimized,
+        .overlay-minimized {
+            background-color: transparent !important;
+            pointer-events: none !important;
+            z-index: 900 !important;
+        }
+
+        .overlay-minimized .modal-container {
+            pointer-events: auto !important;
         }
 
         .global-close-btn {
@@ -2249,8 +2301,7 @@
                 <div class="app-logo">
                     <i class="fas fa-brain"></i>
                 </div>
-                <div class="logo"><span style="font-weight: 400; color: rgba(255,255,255,0.85);">Smart</span><span
-                        style="font-weight: 700;">Hire</span></div>
+                <div class="logo" style="font-weight: 700; color: #ffffff;">SmartHire</div>
             </div>
             <div class="page-context" style="font-weight: 500; padding-left: 115px; font-size: 1.1rem; opacity: 0.9;">
                 Recruiter Dashboard - AI/ML Engineer - v1.2</div>
@@ -2547,7 +2598,7 @@
                 JD </div>
             <div class="sidebar-spacer"></div>
             <div class="sidebar-footer">
-                <div>&copy; 2026 SmartHire</div>
+                <div>&copy; 2026 <span style="font-weight: 700; color: #ffffff;">SmartHire</span></div>
                 <div class="version">Version 1.0.0</div>
             </div>
 
@@ -2559,28 +2610,31 @@
                 <!-- 3) JOB CONTEXT HEADER -->
                 <div class="job-context-header">
                     <div class="jd-icon"><i class="fas fa-briefcase"></i></div><select class="jd-select" id="jd-select">
-                        <option value="AI/ML Engineer" data-version="v1.2" data-status="active" class="opt-active">✔
+                        <option value="AI/ML Engineer" data-version="v1.2" data-status="active" class="opt-active">
+                            &#10004;
                             AI/ML
                             Engineer</option>
-                        <option value="Software Engineer" data-version="v2.0" data-status="active" class="opt-active">✔
+                        <option value="Software Engineer" data-version="v2.0" data-status="active" class="opt-active">
+                            &#10004;
                             Software Engineer</option>
                         <option value="Product Manager" data-version="v1.0" data-status="disapproved"
-                            class="opt-disapproved">✘ Product Manager</option>
-                        <option value="Data Scientist" data-version="v1.5" data-status="active" class="opt-active">✔
+                            class="opt-disapproved">&#10008; Product Manager</option>
+                        <option value="Data Scientist" data-version="v1.5" data-status="active" class="opt-active">
+                            &#10004;
                             Data
                             Scientist</option>
                         <option value="Marketing Specialist" data-version="v1.1" data-status="inactive"
-                            class="opt-inactive">✘ Marketing Specialist</option>
+                            class="opt-inactive">&#10008; Marketing Specialist</option>
                         <option value="Sales Executive" data-version="v1.0" data-status="inactive" class="opt-inactive">
-                            ✘ Sales Executive</option>
+                            &#10008; Sales Executive</option>
                         <option value="Customer Support Rep" data-version="v1.0" data-status="active"
-                            class="opt-active">✔ Customer Support Rep</option>
+                            class="opt-active">&#10004; Customer Support Rep</option>
                         <option value="Financial Analyst" data-version="v2.1" data-status="disapproved"
-                            class="opt-disapproved">✘ Financial Analyst</option>
+                            class="opt-disapproved">&#10008; Financial Analyst</option>
                     </select>
                     <a id="jd-version-link" href="#" target="_blank">v1.2</a>
                     <span id="jd-header-status" class="badge approved active"
-                        style="text-transform: uppercase;">Approved & Active</span>
+                        style="text-transform: capitalize;">Approved & Active</span>
                     <button class="btn-update" id="btn-update-jd">Update JD</button>
                 </div>
                 <!-- 4) KPI CARDS SECTION -->
@@ -2619,8 +2673,9 @@
                 <!-- 7) TABULAR RESULT -->
                 <section class="table-container" id="results-table-container">
                     <div class="panel-title" style="justify-content: space-between; gap: 5px; align-items: center;">
-                        <div style="display: flex; gap: 5px;">Resumes Analysed Results – <span
-                                id="dynamic-jd-title">AI/ML Engineer</span></div>
+                        <div style="display: flex; gap: 5px;">All Analysed Results [Updated] - <span
+                                id="dynamic-jd-title">AI/ML
+                                Engineer</span></div>
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <button id="btn-clear-filters" class="btn-clear" style="display: none;">
                                 <i class="fas fa-undo-alt" style="margin-right: 6px;"></i>Clear All
@@ -3028,7 +3083,7 @@
                                 <option>25</option>
                                 <option>50</option>
                             </select></div>
-                        <div>1–5 of 322</div>
+                        <div>1-5 of 5</div>
                         <div class="page-controls"><button class="page-btn"><i
                                     class="fas fa-chevron-left"></i></button><button class="page-btn"><i
                                     class="fas fa-chevron-right"></i></button>
@@ -3038,7 +3093,7 @@
                 <!-- JD Versions Table -->
                 <section class="table-container" style="margin-top: 24px;">
                     <div class="panel-title" style="justify-content: flex-start; gap: 5px;">JD
-                        Versions – <span id="dynamic-jd-title-versions">AI/ML Engineer</span>
+                        Versions - <span id="dynamic-jd-title-versions">AI/ML Engineer</span>
                     </div>
                     <table>
                         <thead>
@@ -3316,7 +3371,9 @@
         <div class="modal-container">
             <div class="global-modal-header">
                 <div class="global-modal-title" id="upload-modal-title">Upload Resumes</div>
-                <button class="global-close-btn" id="btn-close-upload-modal"><i class="fas fa-times"></i></button>
+                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
+                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
+                        id="btn-close-upload-modal"><i class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
 
@@ -3327,7 +3384,7 @@
                         <div class="modal-jd-icon"><i class="far fa-file-alt"></i></div>
                         <div class="modal-jd-info">
                             <h4>Selected Job Description</h4>
-                            <h2 id="modal-jd-title">AI/ML Engineer – Senior</h2>
+                            <h2 id="modal-jd-title">AI/ML Engineer - Senior</h2>
                             <div class="modal-jd-meta"><span><i class="fas fa-map-marker-alt"></i>San
                                     Francisco</span><span class="version-tag">v2.1 (Latest)</span></div>
                         </div>
@@ -3385,9 +3442,10 @@
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>SN</th>
                                         <th>File Name</th>
-                                        <th>Status</th>
                                         <th>Last Update</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody id="uploadFileTableBody">
@@ -3422,7 +3480,9 @@
                     <div class="global-modal-title">Select Resumes for Analysis</div>
                 </div>
                 <!-- Optional Close Button if needed, or rely on Footer Close -->
-                <button class="global-close-btn" id="btn-close-select-modal"><i class="fas fa-times"></i></button>
+                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
+                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
+                        id="btn-close-select-modal"><i class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
                 <!-- VIEW 1: SELECTION -->
@@ -3524,7 +3584,8 @@
                 <div id="view-progress" style="display: none;">
                     <!-- JD INFO -->
                     <div class="jd-info-card"><span class="jd-label">JD Version
-                            Used:</span><span class="jd-value" id="analysis-progress-jd-value">v1.2 – ...</span>
+                            Used:</span><span class="jd-value" id="analysis-progress-jd-value">v1.2 -
+                            ...</span>
                         <div class="lock-badge"><i class="fas fa-lock"></i>Locked</div>
                     </div>
                     <!-- FILTER BAR -->
@@ -3550,7 +3611,8 @@
                         <div class="progress-header">
                             <div class="section-title">Overall Analysis Progress</div>
                             <div class="progress-percentage-large">53% Complete <span id="progress-count-label"
-                                    style="font-size: 1rem; color: #666; font-weight: normal;">(79 of 150)</span></div>
+                                    style="font-size: 1rem; color: #666; font-weight: normal;">(79 of
+                                    150)</span></div>
                         </div>
                         <div class="progress-track">
                             <div class="progress-fill" style="width: 53%;"></div>
@@ -3684,7 +3746,8 @@
                             <thead>
                                 <tr style="background: #f8f9fc;">
                                     <th class="sticky-col sticky-col-left" style="left: 0; z-index: 13;">SN</th>
-                                    <th class="sticky-col sticky-col-left" style="left: 60px; z-index: 13;">Candidate
+                                    <th class="sticky-col sticky-col-left" style="left: 60px; z-index: 13;">
+                                        Candidate
                                         Name</th>
                                     <th style="min-width: 100px;">City</th>
                                     <th style="min-width: 70px; text-align: center;">Qual.</th>
@@ -3715,7 +3778,8 @@
             </div>
             <div class="global-modal-footer" id="modal-footer-selection">
                 <button class="btn-cancel-global" id="btn-cancel-select">Close</button>
-                <button class="btn-primary-global" id="btn-start-analysis-modal" disabled>Start Analysis (0)</button>
+                <button class="btn-primary-global" id="btn-start-analysis-modal" disabled>Start Analysis
+                    (0)</button>
             </div>
             <!-- ANALYSIS FOOTER (New) -->
             <div class="global-modal-footer" id="modal-footer-progress"
@@ -3735,7 +3799,9 @@
         <div class="modal-container">
             <div class="global-modal-header">
                 <div class="global-modal-title" id="pdf-viewer-title">Document Viewer</div>
-                <button class="global-close-btn" id="btn-close-pdf-modal"><i class="fas fa-times"></i></button>
+                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
+                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
+                        id="btn-close-pdf-modal"><i class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
                 <iframe id="pdf-frame" class="pdf-frame" src=""></iframe>
@@ -3752,14 +3818,17 @@
         <div class="dup-modal-container">
             <div class="global-modal-header">
                 <div class="global-modal-title">Duplicate Resume Detected!</div>
-                <button class="global-close-btn" id="dup-close-btn"><i class="fas fa-times"></i></button>
+                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
+                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
+                        id="dup-close-btn"><i class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
                 <div class="dup-info-text">
                     We found duplicate resumes with matching Email or Phone Number.
                 </div>
                 <div class="dup-description-text">
-                    The following resumes match existing records in the system based on either the candidate's email or
+                    The following resumes match existing records in the system based on either the
+                    candidate's email or
                     phone number:
                 </div>
                 <div class="dup-file-details">
@@ -3972,9 +4041,10 @@
                 mockFiles.forEach((file, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
+                            <td>${index + 1}</td>
                             <td>${file.name}</td>
-                            <td><span class="status-badge status-progress row-status-upload"><div class="dot"></div> In Progress</span></td>
                             <td>${file.time}</td>
+                            <td><span class="status-badge status-progress row-status-upload"><div class="dot"></div> In Progress</span></td>
                         `;
                     fileTableBody.appendChild(row);
                 });
@@ -4279,7 +4349,7 @@
                     if (progressJdTitle) {
                         // Use dashboard selection
                         const currentJd = jdSelect ? jdSelect.value : 'AI/ML Engineer';
-                        progressJdTitle.innerHTML = `<a href="#" class="view-link view-jd-link" style="color: inherit; text-decoration: none;">v1.2 – ${currentJd}</a>`;
+                        progressJdTitle.innerHTML = `<a href="#" class="view-link view-jd-link" style="color: inherit; text-decoration: none;">v1.2 - ${currentJd}</a>`;
                     }
 
                     // Update Progress Count (Simulated 53% - 79 of 150)
@@ -4337,7 +4407,7 @@
                         const currentJd = jdSelect ? jdSelect.value : 'AI/ML Engineer';
                         contextDiv.innerHTML = `
                             <span class="jd-label">JD VERSION USED:</span>
-                            <span class="jd-value">${currentVersion} – ${currentJd}</span>
+                            <span class="jd-value">${currentVersion} - ${currentJd}</span>
                         `;
                     }
 
@@ -5088,7 +5158,9 @@
         <div class="jd-modal-container">
             <div class="global-modal-header">
                 <div class="global-modal-title">Update Job Description</div>
-                <button class="global-close-btn" id="jd-close-btn"><i class="fas fa-times"></i></button>
+                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
+                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
+                        id="jd-close-btn"><i class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body" style="padding: 0;">
                 <div style="padding: 16px 24px 0;">
@@ -5123,7 +5195,9 @@
         <div class="modal-container" style="width: 480px;">
             <div class="global-modal-header">
                 <div class="global-modal-title">Edit Profile</div>
-                <button class="global-close-btn" onclick="closeProfileModal()"><i class="fas fa-times"></i></button>
+                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
+                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
+                        onclick="closeProfileModal()"><i class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
                 <div class="profile-section">
@@ -5158,7 +5232,8 @@
             </div>
             <div class="global-modal-footer">
                 <button class="btn-cancel-global" onclick="closeProfileModal()">Cancel</button>
-                <button class="btn-primary-global" onclick="saveProfile()">Update Profile</button>
+                <button class="btn-primary-global" onclick="saveProfile()">Update
+                    Profile</button>
             </div>
         </div>
     </div>
@@ -5168,14 +5243,17 @@
         <div class="modal-container" style="width: 440px;">
             <div class="global-modal-header">
                 <div class="global-modal-title">Update Password</div>
-                <button class="global-close-btn" onclick="closePasswordModal()"><i class="fas fa-times"></i></button>
+                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
+                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
+                        onclick="closePasswordModal()"><i class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div style="margin-bottom: 12px;">
                         <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary);"></i>
                     </div>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Please set a new password for your account.
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Please set a new
+                        password for your account.
                     </p>
                 </div>
 
@@ -6530,7 +6608,7 @@
                     <div class="modal-container" style="max-width: 400px; width: 90%;">
                         <div class="global-modal-header">
                             <div class="global-modal-title">HR Review Note</div>
-                            <button class="global-close-btn" id="close-note-modal"><i class="fas fa-times"></i></button>
+                            <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)" title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn" id="close-note-modal"><i class="fas fa-times"></i></button></div>
                         </div>
                         <div class="global-modal-body" id="note-content" style="min-height: 100px;">
                             <!-- Content goes here -->
@@ -6623,6 +6701,19 @@
             // Initial call
             updateJDStatus();
         }
+
+        window.toggleMinimize = function (btn) {
+            const modalContainer = btn.closest('.modal-container');
+            if (!modalContainer) return;
+            const overlay = modalContainer.parentElement;
+            if (modalContainer.classList.contains('minimized')) {
+                modalContainer.classList.remove('minimized');
+                if (overlay) overlay.classList.remove('overlay-minimized');
+            } else {
+                modalContainer.classList.add('minimized');
+                if (overlay) overlay.classList.add('overlay-minimized');
+            }
+        };
     </script>
 </body>
 
