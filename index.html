@@ -681,7 +681,7 @@
             color: #fff;
             cursor: pointer;
             line-height: 1;
-            background-color: var(--warning);
+            background-color: transparent;
             width: 32px;
             height: 32px;
             display: flex;
@@ -693,7 +693,7 @@
         }
 
         .global-minimize-btn:hover {
-            opacity: 0.9;
+            background-color: var(--warning);
             transform: scale(1.05);
         }
 
@@ -733,7 +733,7 @@
             color: #fff;
             cursor: pointer;
             line-height: 1;
-            background-color: var(--danger);
+            background-color: transparent;
             width: 32px;
             height: 32px;
             display: flex;
@@ -745,7 +745,7 @@
         }
 
         .global-close-btn:hover {
-            opacity: 0.9;
+            background-color: var(--danger);
             transform: scale(1.05);
         }
 
@@ -2673,8 +2673,7 @@
                 <!-- 7) TABULAR RESULT -->
                 <section class="table-container" id="results-table-container">
                     <div class="panel-title" style="justify-content: space-between; gap: 5px; align-items: center;">
-                        <div style="display: flex; gap: 5px;">All Analysed Results [Updated] - <span
-                                id="dynamic-jd-title">AI/ML
+                        <div style="display: flex; gap: 5px;">All Analysed Results- <span id="dynamic-jd-title">AI/ML
                                 Engineer</span></div>
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <button id="btn-clear-filters" class="btn-clear" style="display: none;">
@@ -3371,8 +3370,9 @@
         <div class="modal-container">
             <div class="global-modal-header">
                 <div class="global-modal-title" id="upload-modal-title">Upload Resumes</div>
-                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
-                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
+                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" id="upload-minimize-btn"
+                        style="display: none;" onclick="toggleMinimize(this)" title="Minimize"><i
+                            class="fas fa-minus"></i></button><button class="global-close-btn"
                         id="btn-close-upload-modal"><i class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
@@ -3480,8 +3480,9 @@
                     <div class="global-modal-title">Select Resumes for Analysis</div>
                 </div>
                 <!-- Optional Close Button if needed, or rely on Footer Close -->
-                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
-                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
+                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" id="select-minimize-btn"
+                        style="display: none;" onclick="toggleMinimize(this)" title="Minimize"><i
+                            class="fas fa-minus"></i></button><button class="global-close-btn"
                         id="btn-close-select-modal"><i class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
@@ -3799,9 +3800,8 @@
         <div class="modal-container">
             <div class="global-modal-header">
                 <div class="global-modal-title" id="pdf-viewer-title">Document Viewer</div>
-                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
-                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
-                        id="btn-close-pdf-modal"><i class="fas fa-times"></i></button></div>
+                <div style="display:flex; gap:8px;"><button class="global-close-btn" id="btn-close-pdf-modal"><i
+                            class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
                 <iframe id="pdf-frame" class="pdf-frame" src=""></iframe>
@@ -4001,6 +4001,7 @@
                         }
 
                         document.getElementById('upload-modal-title').textContent = "Resumes Upload Status";
+                        document.getElementById('upload-minimize-btn').style.display = 'flex';
 
                         // Start Simulation
                         simulateUploadProgress(fileInput.files.length);
@@ -4110,6 +4111,7 @@
                         document.getElementById('upload-view-progress').style.display = 'none';
                         document.getElementById('upload-footer-progress').style.display = 'none';
                         document.getElementById('upload-modal-title').textContent = "Upload Resumes";
+                        document.getElementById('upload-minimize-btn').style.display = 'none';
                         document.getElementById('uploadProgressBar').style.width = '0%';
                         document.getElementById('uploadFileTableBody').innerHTML = '';
                     }, 500);
@@ -4335,7 +4337,10 @@
                     footerProgress.style.display = 'flex';
 
 
-                    if (modalTitle) modalTitle.textContent = "Resume Analysis Status";
+                    if (modalTitle) {
+                        modalTitle.textContent = "Resume Analysis Status";
+                        document.getElementById('select-minimize-btn').style.display = 'flex';
+                    }
 
                     // --- NEW: DUPLICATE DETECTION POPUP TRIGGER ---
                     // Show after 4 seconds
@@ -4564,7 +4569,10 @@
                         viewProgress.style.display = 'none';
                         viewAnalysisResults.style.display = 'none';
                         footerProgress.style.display = 'none';
-                        if (modalTitle) modalTitle.textContent = "Select Resumes for Analysis";
+                        if (modalTitle) {
+                            modalTitle.textContent = "Select Resumes for Analysis";
+                            document.getElementById('select-minimize-btn').style.display = 'none';
+                        }
                         if (btnBackModal) btnBackModal.style.display = 'none';
                     }, 500);
                 });
@@ -4580,7 +4588,10 @@
                         footerSelection.style.display = 'flex';
                         viewProgress.style.display = 'none';
                         footerProgress.style.display = 'none';
-                        if (modalTitle) modalTitle.textContent = "Select Resumes for Analysis";
+                        if (modalTitle) {
+                            modalTitle.textContent = "Select Resumes for Analysis";
+                            document.getElementById('select-minimize-btn').style.display = 'none';
+                        }
                         if (btnBackModal) btnBackModal.style.display = 'none'; // Hide Back Button in Selection View
                     }
 
@@ -4597,14 +4608,20 @@
                         viewAnalysisResults.style.display = 'none';
                         viewProgress.style.display = 'block';
                         footerProgress.style.display = 'flex';
-                        if (modalTitle) modalTitle.textContent = "Resume Analysis Status";
+                        if (modalTitle) {
+                            modalTitle.textContent = "Resume Analysis Status";
+                            document.getElementById('select-minimize-btn').style.display = 'flex';
+                        }
                     } else if (viewProgress.style.display === 'block') {
                         // Go back to Selection View
                         viewProgress.style.display = 'none';
                         footerProgress.style.display = 'none';
                         viewSelection.style.display = 'block';
                         footerSelection.style.display = 'flex';
-                        if (modalTitle) modalTitle.textContent = "Select Resumes for Analysis";
+                        if (modalTitle) {
+                            modalTitle.textContent = "Select Resumes for Analysis";
+                            document.getElementById('select-minimize-btn').style.display = 'none';
+                        }
 
                         // Hide self
                         btnBackModal.style.display = 'none';
@@ -5158,9 +5175,8 @@
         <div class="jd-modal-container">
             <div class="global-modal-header">
                 <div class="global-modal-title">Update Job Description</div>
-                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
-                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
-                        id="jd-close-btn"><i class="fas fa-times"></i></button></div>
+                <div style="display:flex; gap:8px;"><button class="global-close-btn" id="jd-close-btn"><i
+                            class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body" style="padding: 0;">
                 <div style="padding: 16px 24px 0;">
@@ -5195,9 +5211,8 @@
         <div class="modal-container" style="width: 480px;">
             <div class="global-modal-header">
                 <div class="global-modal-title">Edit Profile</div>
-                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
-                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
-                        onclick="closeProfileModal()"><i class="fas fa-times"></i></button></div>
+                <div style="display:flex; gap:8px;"><button class="global-close-btn" onclick="closeProfileModal()"><i
+                            class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
                 <div class="profile-section">
@@ -5243,9 +5258,8 @@
         <div class="modal-container" style="width: 440px;">
             <div class="global-modal-header">
                 <div class="global-modal-title">Update Password</div>
-                <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)"
-                        title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn"
-                        onclick="closePasswordModal()"><i class="fas fa-times"></i></button></div>
+                <div style="display:flex; gap:8px;"><button class="global-close-btn" onclick="closePasswordModal()"><i
+                            class="fas fa-times"></i></button></div>
             </div>
             <div class="global-modal-body">
                 <div style="text-align: center; margin-bottom: 20px;">
@@ -6608,7 +6622,7 @@
                     <div class="modal-container" style="max-width: 400px; width: 90%;">
                         <div class="global-modal-header">
                             <div class="global-modal-title">HR Review Note</div>
-                            <div style="display:flex; gap:8px;"><button class="global-minimize-btn" onclick="toggleMinimize(this)" title="Minimize"><i class="fas fa-minus"></i></button><button class="global-close-btn" id="close-note-modal"><i class="fas fa-times"></i></button></div>
+                            <div style="display:flex; gap:8px;"><button class="global-close-btn" id="close-note-modal"><i class="fas fa-times"></i></button></div>
                         </div>
                         <div class="global-modal-body" id="note-content" style="min-height: 100px;">
                             <!-- Content goes here -->
